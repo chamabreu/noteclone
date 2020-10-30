@@ -1,0 +1,19 @@
+.accountButtons {
+  margin-bottom: 2rem;
+}
+
+.accountButton {
+  display: flex;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.accountButton:hover {
+  background-color: beige;
+}
+
+.buttonIcon {
+  width: 1rem;
+  margin-right: 0.5rem;
+}

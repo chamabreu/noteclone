@@ -1,0 +1,17 @@
+#sideBar.opened {
+  background-color: rgb(245, 245, 245);
+  width: 300px;
+}
+
+#sideBar.closed {
+  background-color: rgb(245, 245, 245);
+}
+
+#sideBar.closed > .sideBarHeader > .accountSection > .accountHeader {
+  background-color: inherit;
+}
+
+#sideBar.closed > .sideBarHeader > .accountSection > .accountHeader > #closeSideBarButton{
+  transform: rotate(180deg)
+}
+
