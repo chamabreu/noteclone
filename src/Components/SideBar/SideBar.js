@@ -9,7 +9,7 @@ import './SBContentSectionStyle.css'
 
 export default function SideBar(props) {
   const activeUserID = Object.keys(props.activeUser)[0]
-  const pages = props.activeUser[activeUserID].pages
+  const pagesList = props.activeUser[activeUserID].pages
 
   if (props.sideBarClosed) {
     return(
@@ -62,8 +62,8 @@ export default function SideBar(props) {
           </div>
   
           <div className="projectsContainer">
-            {pages && 
-              <SBProjectContent projects={pages}/>
+            {pagesList && 
+              <SBProjectContent getPages={props.getPages} pagesList={pagesList}/>
             }
           </div>
   

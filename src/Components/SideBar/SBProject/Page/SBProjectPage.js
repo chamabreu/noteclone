@@ -3,25 +3,23 @@ import { useState } from "react"
 export default function SBProjectPage(props) {
   const [opened, setOpened] = useState("closed")
 
-  const openPageContent = (e) => {
+  const openPageContent = () => {
     opened === "closed" ? setOpened("opened") : setOpened("closed")
   }
-  
+ 
+  var childPages = props.childPages
+  const pages = props.getPages(childPages.pages)
   var subComps = []
-  if (Array.isArray(props.childPages)) {
-    subComps = props.childPages.map(pg => {
-      return (
-        <SBProjectPage key={pg} name={pg} childPages={[]}/>
-      )
-    })
-  }else {
-    for (const childName of Object.keys(props.childPages)) {
-      subComps.push(
-        <SBProjectPage key={childName} name={childName} childPages={props.childPages[childName]}/>
-      )
-    }
+  for (const pageID of Object.keys(pages)) {
+    subComps.push(
+        <SBProjectPage
+          key={pageID}
+          name={pages[pageID].name}
+          childPages={pages[pageID]}
+          getPages={props.getPages}
+        />
+    )
   }
-  
 
   if (opened === "opened") {
     return(
