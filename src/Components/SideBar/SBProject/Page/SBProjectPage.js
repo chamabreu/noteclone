@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
 export default function SBProjectPage(props) {
   const [opened, setOpened] = useState("closed")
@@ -6,23 +7,25 @@ export default function SBProjectPage(props) {
   const openPageContent = () => {
     opened === "closed" ? setOpened("opened") : setOpened("closed")
   }
- 
+
   var childPages = props.childPages
   const pages = props.getPages(childPages.pages)
   var subComps = []
   for (const pageID of Object.keys(pages)) {
     subComps.push(
+      <Link to={pageID}>
         <SBProjectPage
           key={pageID}
           name={pages[pageID].name}
           childPages={pages[pageID]}
           getPages={props.getPages}
         />
+      </Link>
     )
   }
 
   if (opened === "opened") {
-    return(
+    return (
       <div className="pageBox">
         <div className="pageHead">
           <div className={"pageContent " + opened}>
@@ -40,8 +43,8 @@ export default function SBProjectPage(props) {
         </div>
       </div>
     )
-  }else {
-    return(
+  } else {
+    return (
       <div className="pageBox">
         <div className="pageHead">
           <div className={"pageContent " + opened}>

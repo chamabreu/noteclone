@@ -10,7 +10,6 @@ export default function SBAccountSelector(props) {
   })
 
 
-
   return (
     <select
       id="accountSelector"

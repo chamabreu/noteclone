@@ -2,6 +2,7 @@ import React from 'react';
 import SideBar from './Components/SideBar/SideBar'
 import MainView from './Components/MainView/MainView'
 import './AppStyle.css'
+import {Route, Switch } from 'react-router-dom';
 
 const db = {
   users: {
@@ -106,12 +107,11 @@ const db = {
 class App extends React.Component {
   constructor() {
     super();
-
     this.state = {
       // Empty List to hold All Users in db for Account-Selector
       allUserList: [],
       // State of active User. Object of {userID: "UserName"}.
-      activeUser: {empty: "empty"},
+      activeUser: { empty: "empty" },
       // SideBar State
       sideBarClosed: false
     }
@@ -120,6 +120,7 @@ class App extends React.Component {
     this.switchUser = this.switchUser.bind(this)
     this.closeSideBar = this.closeSideBar.bind(this)
     this.getPages = this.getPages.bind(this)
+    this.getData = this.getData.bind(this)
   }
 
 
@@ -130,23 +131,24 @@ class App extends React.Component {
     for (const userID of Object.keys(db.users)) {
       // Cycle through ALL users keys (ids) and create a Object of each USer
       // {userID: "UserName"}
-      dbUsers.push({[userID]: db.users[userID].name})
+      dbUsers.push({ [userID]: db.users[userID].name })
     }
-    
+
     // Set State of All users in DB
     this.setState({
       allUserList: dbUsers
     })
   }
-  
+
   // When Account-Selector switches User
   switchUser(event) {
+
     // event.target == <input select>
     // .value is the given userID
     const userID = event.target.value
     // get all userData from db
     const userData = db.users[event.target.value]
-    
+
     // Set State for active User as Object
     // activeUser: {
     //   userID: {
@@ -176,9 +178,11 @@ class App extends React.Component {
     for (const pageID of pagesList) {
       pages[pageID] = db.pages[pageID]
     }
-
     return pages
+  }
 
+  getData(pageID) {
+    return db.contents[pageID]
   }
 
 
@@ -186,19 +190,39 @@ class App extends React.Component {
   render() {
     return (
       <main>
-        <SideBar
-        // for Account-Selector
-          allUserList={this.state.allUserList}
-        // for SBPageContent
-          activeUser={this.state.activeUser}
-        // for SideBar Handling
-          sideBarClosed={this.state.sideBarClosed}
-        // Functions
-          switchUser={this.switchUser}
-          closeSideBar={this.closeSideBar}
-          getPages={this.getPages}
-        />
-        <MainView />
+        <Switch>
+          <Route exact path="/">
+            <SideBar
+              // for Account-Selector
+              allUserList={this.state.allUserList}
+              // for SBPageContent
+              activeUser={this.state.activeUser}
+              // for SideBar Handling
+              sideBarClosed={this.state.sideBarClosed}
+              // Functions
+              switchUser={this.switchUser}
+              closeSideBar={this.closeSideBar}
+              getPages={this.getPages}
+            />
+            <MainView getData={this.getData} />
+          </Route>
+          <Route path="/:page">
+            <SideBar
+              // for Account-Selector
+              allUserList={this.state.allUserList}
+              // for SBPageContent
+              activeUser={this.state.activeUser}
+              // for SideBar Handling
+              sideBarClosed={this.state.sideBarClosed}
+              // Functions
+              switchUser={this.switchUser}
+              closeSideBar={this.closeSideBar}
+              getPages={this.getPages}
+            />
+            <MainView getData={this.getData} />
+          </Route>
+
+        </Switch>
       </main>
     );
   }
