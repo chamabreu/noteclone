@@ -11,10 +11,13 @@
 
 
 .projectContent > div > .pageBox {
-  padding-left: 1rem;
   margin-bottom: 1rem;
 }
 
+
+.pageHead.active {
+  background-color: lightgray;
+}
 
 .pageContent{
   display: flex;
@@ -34,9 +37,11 @@
   user-select: none;
 }
 
-.pageChilds {
-  padding-left: 1rem;
+.pageLabel:active, .pageLabel:visited, .pageLabel:link {
+  color: inherit;
+  text-decoration: none;
 }
+
 
 .noSubPage {
   color: lightgray;
