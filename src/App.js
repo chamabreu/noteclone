@@ -41,6 +41,8 @@ class App extends React.Component {
     this.setState({
       allUserList: dbUsers
     })
+
+    // this.switchUser({target: {value: "mamaID"}})
   }
 
   // When Account-Selector switches User

@@ -1,8 +1,16 @@
 module.exports = {
   users: {
-    mamaID: {
-      name: "Mama",
-      pages: ["housingID"]
+    someOneID: {
+      name: "Some One",
+      pages: ["housingID", "animalsID"]
+    },
+    anotherUserID: {
+      name: "Another User",
+      pages: ["officeID", "manuelID"]
+    },
+    mayBeAdminID: {
+      name: "May Be Admin",
+      pages: ["lionID", "animalsID"]
     },
   },
 
