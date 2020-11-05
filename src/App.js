@@ -4,6 +4,9 @@ import MainView from './Components/MainView/MainView'
 import './AppStyle.css'
 import {Route, Switch } from 'react-router-dom';
 import db from './FakeDB'
+import Welcome from './Components/Public/Welcome';
+import Login from './Components/Public/Login';
+import Register from './Components/Public/Register';
 
 
 
@@ -96,6 +99,11 @@ class App extends React.Component {
     return (
       <main>
         <Switch>
+          <Route exact path='/' component={Welcome} />
+          <Route exact path='/login' component={Login} />
+          <Route exact path='/register' component={Register} />
+        </Switch>
+        {/* <Switch>
           <Route exact path="/">
             <SideBar
               // for Account-Selector
@@ -127,7 +135,7 @@ class App extends React.Component {
             <MainView getData={this.getData} />
           </Route>
 
-        </Switch>
+        </Switch> */}
       </main>
     );
   }
