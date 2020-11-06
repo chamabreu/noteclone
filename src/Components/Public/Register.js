@@ -1,7 +1,10 @@
 import axios from "axios"
-import { Link } from "react-router-dom"
+import { useState } from "react"
+import { Link, useHistory } from "react-router-dom"
 
 export default function Register() {
+  const [error, setError] = useState(undefined)
+  const history = useHistory()
 
   const register = (event) => {
     event.preventDefault()
@@ -12,6 +15,17 @@ export default function Register() {
       email: email,
       password: password
     })
+      .then(result => {
+        if (result.status === 200) {
+          history.push('/login')
+        } else {
+          setError("Something went wrong", result)
+        }
+      })
+      .catch(error => {
+        setError(error.response.data)
+
+      })
   }
 
   return (
@@ -30,6 +44,7 @@ export default function Register() {
         <br></br>
         <button type="submit">Login</button>
       </form>
+      {error && <p>{error}</p>}
     </div>
   )
 }

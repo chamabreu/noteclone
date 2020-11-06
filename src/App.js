@@ -1,109 +1,73 @@
-import React from 'react';
-import SideBar from './Components/SideBar/SideBar'
-import MainView from './Components/MainView/MainView'
+import React, { createContext } from 'react';
 import './AppStyle.css'
-import {Route, Switch } from 'react-router-dom';
-import db from './FakeDB'
+import { Route, Switch } from 'react-router-dom';
 import Welcome from './Components/Public/Welcome';
 import Login from './Components/Public/Login';
 import Register from './Components/Public/Register';
+import axios from 'axios'
 
+export const UserContext = createContext({ authed: false, user: null, logIn: null, logOut: null })
 
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      // Empty List to hold All Users in db for Account-Selector
-      allUserList: [],
-      // State of active User. Object of {userID: "UserName"}.
-      activeUser: { empty: "empty" },
-      // SideBar State
-      sideBarClosed: false
+      authed: false,
+      user: null
     }
-
-    // Bind Functions
-    this.switchUser = this.switchUser.bind(this)
-    this.closeSideBar = this.closeSideBar.bind(this)
-    this.getPages = this.getPages.bind(this)
-    this.getData = this.getData.bind(this)
+    this.logIn = this.logIn.bind(this)
+    this.logOut = this.logOut.bind(this)
   }
 
 
   componentDidMount() {
-    let dbUsers = []
 
-    // Simulation of fetching users from server
-    for (const userID of Object.keys(db.users)) {
-      // Cycle through ALL users keys (ids) and create a Object of each USer
-      // {userID: "UserName"}
-      dbUsers.push({ [userID]: db.users[userID].name })
-    }
+    axios.post('/data')
+      .then(res => {
+        console.log('RESULT FROM POST DATA :>> ', res)
+        this.setState({
+          authed: true,
+          user: res.data.user
+        })
+      })
+      .catch(error => console.log('error :>> ', error))
 
-    // Set State of All users in DB
-    this.setState({
-      allUserList: dbUsers
-    })
-
-    // this.switchUser({target: {value: "mamaID"}})
   }
 
-  // When Account-Selector switches User
-  switchUser(event) {
-
-    // event.target == <input select>
-    // .value is the given userID
-    const userID = event.target.value
-    // get all userData from db
-    const userData = db.users[event.target.value]
-
-    // Set State for active User as Object
-    // activeUser: {
-    //   userID: {
-    //     name: "UserName",
-    //     pages: ["pageID1", "pageID2", "..."]
-    //   },
-    // }
+  logIn() {
     this.setState({
-      activeUser: {
-        [userID]: userData
-      }
+      authed: true
     })
   }
 
-  // Button to close Sidebar
-  closeSideBar() {
-    // If sidebar is closed, Sidebar only renders the Button
-    // to save Space on the left Side
-    this.setState((state) => ({
-      sideBarClosed: !state.sideBarClosed
-    }))
-  }
-
-  // For SBProjectContent getPages()
-  getPages(pagesList) {
-    let pages = {}
-    for (const pageID of pagesList) {
-      pages[pageID] = db.pages[pageID]
-    }
-    return pages
-  }
-
-  getData(pageID) {
-    return db.contents[pageID]
+  logOut() {
+    this.setState({
+      authed: false
+    })
   }
 
 
 
   render() {
     return (
-      <main>
-        <Switch>
-          <Route exact path='/' component={Welcome} />
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/register' component={Register} />
-        </Switch>
-        {/* <Switch>
+      <UserContext.Provider
+        value={{
+          authed: this.state.authed,
+          user: this.state.user,
+          logIn: this.logIn,
+          logOut: this.logOut
+        }}>
+        {this.state.authed ? <span>Authed</span> : <span>Not Authed</span>}
+        <main>
+          <br></br>
+          <Switch>
+            <Route exact path='/' component={Welcome} />
+            <Route exact path='/login' component={Login} />
+            <Route exact path='/register' component={Register} />
+          </Switch>
+
+          {/* <Switch>
           <Route exact path="/">
             <SideBar
               // for Account-Selector
@@ -136,7 +100,9 @@ class App extends React.Component {
           </Route>
 
         </Switch> */}
-      </main>
+        </main>
+
+      </UserContext.Provider>
     );
   }
 }
