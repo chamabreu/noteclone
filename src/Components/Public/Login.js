@@ -35,6 +35,7 @@ export default function Login() {
         // console.log('res :>> ', res);
       })
       .catch(error => {
+        console.log('error :>> ', error);
         setError(error.response.data)
       })
   }

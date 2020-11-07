@@ -1,12 +1,13 @@
 import React, { createContext } from 'react';
 import './AppStyle.css'
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import Welcome from './Components/Public/Welcome';
 import Login from './Components/Public/Login';
 import Register from './Components/Public/Register';
 import axios from 'axios'
+import Internal from './Internal';
 
-export const UserContext = createContext({ authed: false, user: null, logIn: null, logOut: null })
+export const UserContext = createContext({ authed: false, user: null, data: null, logIn: null, logOut: null })
 
 
 class App extends React.Component {
@@ -14,7 +15,8 @@ class App extends React.Component {
     super();
     this.state = {
       authed: false,
-      user: null
+      user: null,
+      data: null
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
@@ -22,23 +24,27 @@ class App extends React.Component {
 
 
   componentDidMount() {
-
     axios.post('/data')
       .then(res => {
-        console.log('RESULT FROM POST DATA :>> ', res)
         this.setState({
           authed: true,
-          user: res.data.user
+          user: res.data.user,
+          data: res.data.data
         })
       })
       .catch(error => console.log('error :>> ', error))
-
   }
 
   logIn() {
-    this.setState({
-      authed: true
-    })
+    axios.post('/data')
+      .then(res => {
+        this.setState({
+          authed: true,
+          user: res.data.user,
+          data: res.data.data
+        })
+      })
+      .catch(error => console.log('error :>> ', error))
   }
 
   logOut() {
@@ -50,60 +56,51 @@ class App extends React.Component {
 
 
   render() {
-    return (
-      <UserContext.Provider
-        value={{
-          authed: this.state.authed,
-          user: this.state.user,
-          logIn: this.logIn,
-          logOut: this.logOut
-        }}>
-        {this.state.authed ? <span>Authed</span> : <span>Not Authed</span>}
-        <main>
-          <br></br>
-          <Switch>
-            <Route exact path='/' component={Welcome} />
-            <Route exact path='/login' component={Login} />
-            <Route exact path='/register' component={Register} />
-          </Switch>
-
-          {/* <Switch>
-          <Route exact path="/">
-            <SideBar
-              // for Account-Selector
-              allUserList={this.state.allUserList}
-              // for SBPageContent
-              activeUser={this.state.activeUser}
-              // for SideBar Handling
-              sideBarClosed={this.state.sideBarClosed}
-              // Functions
-              switchUser={this.switchUser}
-              closeSideBar={this.closeSideBar}
-              getPages={this.getPages}
-            />
-            <MainView getData={this.getData} />
+    if (this.state.authed) {
+      console.log("RENDER AUTHED")
+      return (
+        <Switch>
+          <Route exact path='/'>
+            <UserContext.Provider
+              value={{
+                authed: this.state.authed,
+                user: this.state.user,
+                data: this.state.data,
+                logIn: this.logIn,
+                logOut: this.logOut
+              }}>
+              <Internal />
+            </UserContext.Provider>
           </Route>
-          <Route path="/:page">
-            <SideBar
-              // for Account-Selector
-              allUserList={this.state.allUserList}
-              // for SBPageContent
-              activeUser={this.state.activeUser}
-              // for SideBar Handling
-              sideBarClosed={this.state.sideBarClosed}
-              // Functions
-              switchUser={this.switchUser}
-              closeSideBar={this.closeSideBar}
-              getPages={this.getPages}
-            />
-            <MainView getData={this.getData} />
-          </Route>
+          <Route><h1>Not Found</h1></Route>
+        </Switch>
 
-        </Switch> */}
-        </main>
+      )
+    } else {
+      console.log("NO AUTHED RENDER")
+      return (
+        <UserContext.Provider
+          value={{
+            authed: this.state.authed,
+            user: this.state.user,
+            logIn: this.logIn,
+            logOut: this.logOut
+          }}>
+          {this.state.authed ? <span>Authed {this.state.user}</span> : <span>Not Authed</span>}
+          <main>
+            <br></br>
+            <Switch>
+              <Route exact path='/' component={Welcome} />
+              <Route exact path='/login' component={Login} />
+              <Route exact path='/register' component={Register} />
+              <Route render={() => (<h1>Not found</h1>)} />
+            </Switch>
+          </main>
+        </UserContext.Provider>
 
-      </UserContext.Provider>
-    );
+      );
+
+    }
   }
 }
 
