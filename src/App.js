@@ -1,101 +1,108 @@
-import React, { createContext } from 'react';
+import React, { Fragment } from 'react';
 import './AppStyle.css'
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import Welcome from './Components/Public/Welcome';
 import Login from './Components/Public/Login';
 import Register from './Components/Public/Register';
 import axios from 'axios'
 import Internal from './Internal';
-
-export const UserContext = createContext({ authed: false, user: null, data: null, logIn: null, logOut: null })
+import UserContext from './Context/UserContext'
 
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      loading: true,
       authed: false,
       user: null,
       data: null
     }
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
+    this.getData = this.getData.bind(this)
   }
 
 
   componentDidMount() {
-    axios.post('/data')
-      .then(res => {
-        this.setState({
-          authed: true,
-          user: res.data.user,
-          data: res.data.data
-        })
-      })
-      .catch(error => console.log('error :>> ', error))
+    this.getData()
   }
 
-  logIn() {
-    axios.post('/data')
-      .then(res => {
-        this.setState({
-          authed: true,
-          user: res.data.user,
-          data: res.data.data
-        })
-      })
-      .catch(error => console.log('error :>> ', error))
-  }
-
-  logOut() {
+  logIn(user) {
     this.setState({
-      authed: false
+      authed: true,
+      user: user
     })
   }
 
+  logOut() {
+    axios.post('/logout')
+      .then(res => {
+        this.setState({
+          authed: false,
+          user: null,
+          data: null
+        })
+      })
+      .catch(error => {
+        console.log('error :>> ', error);
+      })
+  }
+
+  getData() {
+    axios.post('/data')
+      .then(res => {
+        console.log("SUCCES MAIN /DATA")
+        console.log('res.data :>> ', res.data);
+        this.setState({
+          authed: true,
+          user: res.data.user,
+          data: res.data.data,
+          loading: false
+        })
+
+      })
+      .catch(error => {
+        this.setState({
+          authed: false,
+          user: null,
+          data: null,
+          loading: false
+        })
+        console.log('error :>> ', error)
+      })
+  }
 
 
   render() {
-    if (this.state.authed) {
-      console.log("RENDER AUTHED")
+    if (this.state.loading) {
       return (
-        <Switch>
-          <Route exact path='/'>
-            <UserContext.Provider
-              value={{
-                authed: this.state.authed,
-                user: this.state.user,
-                data: this.state.data,
-                logIn: this.logIn,
-                logOut: this.logOut
-              }}>
-              <Internal />
-            </UserContext.Provider>
-          </Route>
-          <Route><h1>Not Found</h1></Route>
-        </Switch>
-
+        null
       )
-    } else {
-      console.log("NO AUTHED RENDER")
+    } else if (this.state.authed) {
       return (
         <UserContext.Provider
           value={{
-            authed: this.state.authed,
             user: this.state.user,
-            logIn: this.logIn,
+            data: this.state.data,
+            getData: this.getData,
             logOut: this.logOut
           }}>
-          {this.state.authed ? <span>Authed {this.state.user}</span> : <span>Not Authed</span>}
-          <main>
-            <br></br>
-            <Switch>
-              <Route exact path='/' component={Welcome} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path='/register' component={Register} />
-              <Route render={() => (<h1>Not found</h1>)} />
-            </Switch>
-          </main>
+          <Internal />
+        </UserContext.Provider>
+      )
+    } else {
+      return (
+        <UserContext.Provider
+          value={{
+            logIn: this.logIn,
+          }}>
+          <Switch>
+            <Route exact path='/' component={Welcome} />
+            <Route exact path='/login' component={Login} />
+            <Route exact path='/register' component={Register} />
+            <Route render={() => (<><h1>Not found</h1><Link to='/'>Welcome Page</Link></>)} />
+          </Switch>
         </UserContext.Provider>
 
       );
