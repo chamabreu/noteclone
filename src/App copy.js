@@ -105,36 +105,36 @@
 //         </Switch>
 
 //         {/* <Switch>
-//           <Route exact path="/">
-//             <SideBar
-//               // for Account-Selector
-//               allUserList={this.state.allUserList}
-//               // for SBPageContent
-//               activeUser={this.state.activeUser}
-//               // for SideBar Handling
-//               sideBarClosed={this.state.sideBarClosed}
-//               // Functions
-//               switchUser={this.switchUser}
-//               closeSideBar={this.closeSideBar}
-//               getPages={this.getPages}
-//             />
-//             <MainView getData={this.getData} />
-//           </Route>
-//           <Route path="/:page">
-//             <SideBar
-//               // for Account-Selector
-//               allUserList={this.state.allUserList}
-//               // for SBPageContent
-//               activeUser={this.state.activeUser}
-//               // for SideBar Handling
-//               sideBarClosed={this.state.sideBarClosed}
-//               // Functions
-//               switchUser={this.switchUser}
-//               closeSideBar={this.closeSideBar}
-//               getPages={this.getPages}
-//             />
-//             <MainView getData={this.getData} />
-//           </Route>
+          // <Route exact path="/">
+          //   <SideBar
+          //     // for Account-Selector
+          //     allUserList={this.state.allUserList}
+          //     // for SBPageContent
+          //     activeUser={this.state.activeUser}
+          //     // for SideBar Handling
+          //     sideBarClosed={this.state.sideBarClosed}
+          //     // Functions
+          //     switchUser={this.switchUser}
+          //     closeSideBar={this.closeSideBar}
+          //     getPages={this.getPages}
+          //   />
+          //   <MainView getData={this.getData} />
+          // </Route>
+          // <Route path="/:page">
+          //   <SideBar
+          //     // for Account-Selector
+          //     allUserList={this.state.allUserList}
+          //     // for SBPageContent
+          //     activeUser={this.state.activeUser}
+          //     // for SideBar Handling
+          //     sideBarClosed={this.state.sideBarClosed}
+          //     // Functions
+          //     switchUser={this.switchUser}
+          //     closeSideBar={this.closeSideBar}
+          //     getPages={this.getPages}
+          //   />
+          //   <MainView getData={this.getData} />
+          // </Route>
 
 //         </Switch> */}
 //       </main>

@@ -1,0 +1,49 @@
+
+.accountHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2rem;
+  margin: 10px 0;
+  padding: 5px 1rem;
+  background-color: rgb(225, 232, 238);
+}
+
+
+.accountName {
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.accountHeader.closed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2rem;
+  margin: 10px 0;
+  padding: 5px 0;
+  background-color: rgb(225, 232, 238);
+}
+
+.accountHeader.closed:hover #closeSideBarButton {
+  display: block;
+}
+
+
+#closeSideBarButton {
+  cursor: pointer;
+  width: 2rem;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  color: rgb(109, 109, 109);
+  opacity: 0.1;
+}
+
+#closeSideBarButton:hover {
+  opacity: 1;
+}

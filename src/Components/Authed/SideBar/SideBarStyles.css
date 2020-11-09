@@ -1,10 +1,18 @@
 #sideBar.opened {
   background-color: rgb(245, 245, 245);
   width: 300px;
+  transition: width 200ms;
 }
 
 #sideBar.closed {
   background-color: rgb(245, 245, 245);
+  width: 20px;
+  transition: 200ms;
+}
+
+#sideBar.closed:hover {
+  width: 50px;
+  transition: 200ms;
 }
 
 #sideBar.closed > .sideBarHeader > .accountSection > .accountHeader {

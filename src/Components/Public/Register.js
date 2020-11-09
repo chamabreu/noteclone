@@ -42,7 +42,7 @@ export default function Register() {
         <input type="text" name="password" id="password" placeholder="password"></input>
         <br></br>
         <br></br>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
       {error && <p>{error}</p>}
     </div>
