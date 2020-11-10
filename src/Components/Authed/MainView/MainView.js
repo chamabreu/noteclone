@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import UserContext from '../../../Context/UserContext'
 import './MainViewStyle.css'
+import axios from 'axios'
 
 export default function MainView() {
   const userContext = useContext(UserContext)
@@ -9,6 +10,8 @@ export default function MainView() {
   const initID = useParams().page || null
   const initPageData = initID ? userContext.data[initID] : null
   const initName = initPageData ? initPageData.name : ""
+  const subPages = initPageData ? initPageData.pages : null
+  console.log('subPages :>> ', subPages);
 
   const [statedPageID, setStatedPageID] = useState(initID || null)
   const [statedPageName, setStatedPageName] = useState(initName)
@@ -23,6 +26,22 @@ export default function MainView() {
     userContext.updatePageName(statedPageID, statedPageName)
   }
 
+  const addSubPage = () => {
+    axios.post('/createSubPage', {
+      parentPage: statedPageID
+    })
+      .then(userContext.getData())
+      .catch(err => console.log('err :>> ', err))
+  }
+
+  const deletePage = () => {
+    axios.post('/removePage', {
+      pageID: statedPageID
+    })
+    .then(userContext.getData())
+    .catch(err => console.log('err :>> ', err))
+  }
+
   useEffect(() => {
     setStatedPageID(initID)
     setStatedPageName(initName)
@@ -31,12 +50,29 @@ export default function MainView() {
   if (statedPageID && initPageData) {
     return (
       <div id="mainView">
-        <input
-          type="text"
-          value={statedPageName}
-          onChange={changePageName}
-          style={{ fontSize: "30px", border: "none", outline: "none", backgroundColor: "lightgray" }} />
-        <button onClick={saveNewName}>Save</button>
+        <div id="mvPageHeader">
+          <input
+            type="text"
+            value={statedPageName}
+            onChange={changePageName}
+            style={{ fontSize: "30px", border: "none", outline: "none", backgroundColor: "lightgray" }}
+          />
+          
+          {(statedPageName !== initName)
+            ? <button onClick={saveNewName}>Save Name</button>
+            : null
+          }
+
+          <button onClick={deletePage}>Delete</button>
+        </div>
+        <hr></hr>
+        <div id="mvSubPages">
+          {initName} has {subPages.length} subpages.
+          <button onClick={addSubPage}>Add SubPage</button>
+          <p>List of Subpages</p>
+        </div>
+
+
       </div>
     )
   } else {
