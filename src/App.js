@@ -21,6 +21,7 @@ class App extends React.Component {
     this.logIn = this.logIn.bind(this)
     this.logOut = this.logOut.bind(this)
     this.getData = this.getData.bind(this)
+    this.updatePageName = this.updatePageName.bind(this)
   }
 
 
@@ -71,6 +72,17 @@ class App extends React.Component {
       })
   }
 
+  updatePageName(pageID, newName) {
+    // console.log('pageID :>> ', pageID);
+    // console.log('newName :>> ', newName);
+    axios.post('/updatePageName', {pageID: pageID, newName: newName})
+      .then(res => {
+        this.getData()
+      })
+      .catch(err => console.log('err :>> ', err))
+      
+  }
+
 
   render() {
     if (this.state.loading) {
@@ -84,6 +96,7 @@ class App extends React.Component {
             user: this.state.user,
             data: this.state.data,
             getData: this.getData,
+            updatePageName: this.updatePageName,
             logOut: this.logOut
           }}>
           <Authed />

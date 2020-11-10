@@ -19,7 +19,7 @@ export default function SideBar() {
   const createNewPage = () => {
     axios.post('/newPage')
     .then(() => {
-      console.log("Done")
+      userContext.getData()
     })
     .catch(error => console.log('error :>> ', error))
 
