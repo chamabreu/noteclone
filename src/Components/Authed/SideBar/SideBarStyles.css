@@ -2,6 +2,9 @@
   background-color: rgb(245, 245, 245);
   width: 300px;
   transition: width 200ms;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
 }
 
 #sideBar.closed {
@@ -23,3 +26,20 @@
   transform: rotate(180deg)
 }
 
+#logOutButton {
+  margin: auto 0.5rem 0.5rem 0.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 1rem;
+  background-color: rgb(225, 232, 238);
+
+}
+
+#logOutButton:hover {
+  background-color: rgb(214, 230, 244);
+  ;
+}

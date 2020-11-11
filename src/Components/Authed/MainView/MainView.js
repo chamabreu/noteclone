@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import UserContext from '../../../Context/UserContext'
 import './MainViewStyle.css'
 import axios from 'axios'
+import PageLink from './PageLink'
 
 export default function MainView() {
   const userContext = useContext(UserContext)
@@ -11,7 +12,6 @@ export default function MainView() {
   const initPageData = initID ? userContext.data[initID] : null
   const initName = initPageData ? initPageData.name : ""
   const subPages = initPageData ? initPageData.pages : null
-  console.log('subPages :>> ', subPages);
 
   const [statedPageID, setStatedPageID] = useState(initID || null)
   const [statedPageName, setStatedPageName] = useState(initName)
@@ -30,7 +30,7 @@ export default function MainView() {
     axios.post('/createSubPage', {
       parentPage: statedPageID
     })
-      .then(userContext.getData())
+      .then(userContext.getData)
       .catch(err => console.log('err :>> ', err))
   }
 
@@ -38,14 +38,15 @@ export default function MainView() {
     axios.post('/removePage', {
       pageID: statedPageID
     })
-    .then(userContext.getData())
-    .catch(err => console.log('err :>> ', err))
+      .then(userContext.getData)
+      .catch(err => console.log('err :>> ', err))
   }
 
   useEffect(() => {
     setStatedPageID(initID)
     setStatedPageName(initName)
-  }, [initID, initName])
+    // setStatedPageData(initPageData)
+  }, [initID, initName/* , initPageData */])
 
   if (statedPageID && initPageData) {
     return (
@@ -57,7 +58,7 @@ export default function MainView() {
             onChange={changePageName}
             style={{ fontSize: "30px", border: "none", outline: "none", backgroundColor: "lightgray" }}
           />
-          
+
           {(statedPageName !== initName)
             ? <button onClick={saveNewName}>Save Name</button>
             : null
@@ -65,14 +66,47 @@ export default function MainView() {
 
           <button onClick={deletePage}>Delete</button>
         </div>
+
         <hr></hr>
+
+
         <div id="mvSubPages">
           {initName} has {subPages.length} subpages.
           <button onClick={addSubPage}>Add SubPage</button>
           <p>List of Subpages</p>
+          {subPages.map(sp => {
+            return (<PageLink name={sp} />)
+          })}
         </div>
 
+        <hr></hr>
 
+        <div id="mvPageContent">
+          Here will be the Data the Page includes.
+          <br></br>
+          <p>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+            sed diam nonumy eirmod tempor invidunt ut labore et dolore
+            magna aliquyam erat, sed diam voluptua.
+            At vero eos et accusam et justo duo dolores et ea rebum.
+          </p>
+          <p>
+            Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
+            diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+            ipsum dolor sit amet.
+          </p>
+        </div>
+      </div>
+    )
+  } else if (statedPageID && !initPageData) {
+    return (
+      <div id="mainView">
+        <div id="mvPageHeader">
+          <p>{statedPageID} does not exist.</p>
+        </div>
       </div>
     )
   } else {

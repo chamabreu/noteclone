@@ -18,9 +18,7 @@ export default function SideBar() {
 
   const createNewPage = () => {
     axios.post('/newPage')
-    .then(() => {
-      userContext.getData()
-    })
+    .then(userContext.getData)
     .catch(error => console.log('error :>> ', error))
 
   }
@@ -59,7 +57,7 @@ export default function SideBar() {
 
 
           <div className="pagesContainer">
-            {userContext.data.nodata
+            {userContext.data.pages.length === 0
               ? "You have no Pages so far"
               : <SBPageContent pagesList={userContext.data.pages} />
             }
@@ -67,6 +65,9 @@ export default function SideBar() {
 
         </div>
 
+        <div id="logOutButton" onClick={userContext.logOut}>
+          Log Me Out
+        </div>
 
       </div >
     )
