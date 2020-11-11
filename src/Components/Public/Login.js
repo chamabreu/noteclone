@@ -30,6 +30,7 @@ export default function Login() {
       .then(res => {
         switch (res.status) {
           case 200:
+            console.log('res.status :>> ', res.status);
             userContext.logIn(email)
             history.push('/')
             break;

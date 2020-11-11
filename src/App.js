@@ -30,6 +30,7 @@ class App extends React.Component {
   }
 
   logIn(user) {
+    console.log('user :>> ', user);
     this.setState({
       authed: true,
       user: user
@@ -90,7 +91,6 @@ class App extends React.Component {
         null
       )
     } else if (this.state.authed) {
-      console.log(this.state.data)
       return (
         <UserContext.Provider
           value={{
