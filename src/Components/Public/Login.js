@@ -23,7 +23,7 @@ export default function Login() {
   const login = (event) => {
     event.preventDefault()
 
-    axios.post('/login', {
+    axios.post('/api/login', {
       email: email,
       password: password
     })

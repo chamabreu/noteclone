@@ -38,7 +38,7 @@ class App extends React.Component {
   }
 
   logOut() {
-    axios.post('/logout')
+    axios.post('/api/logout')
       .then(() => {
         this.setState({
           authed: false,
@@ -52,7 +52,7 @@ class App extends React.Component {
   }
 
   getData() {
-    axios.post('/data')
+    axios.post('/api/data')
       .then(res => {
         this.setState({
           authed: true,
@@ -76,7 +76,7 @@ class App extends React.Component {
   updatePageName(pageID, newName) {
     // console.log('pageID :>> ', pageID);
     // console.log('newName :>> ', newName);
-    axios.post('/updatePageName', {pageID: pageID, newName: newName})
+    axios.post('/api/updatePageName', {pageID: pageID, newName: newName})
       .then(res => {
         this.getData()
       })

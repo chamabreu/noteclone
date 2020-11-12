@@ -11,7 +11,7 @@ export default function Register() {
     const email = event.target.email.value
     const password = event.target.password.value
 
-    axios.post('/register', {
+    axios.post('/api/register', {
       email: email,
       password: password
     })

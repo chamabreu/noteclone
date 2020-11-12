@@ -27,7 +27,7 @@ export default function MainView() {
   }
 
   const addSubPage = () => {
-    axios.post('/createSubPage', {
+    axios.post('/api/createSubPage', {
       parentPage: statedPageID
     })
       .then(userContext.getData)
@@ -35,7 +35,7 @@ export default function MainView() {
   }
 
   const deletePage = () => {
-    axios.post('/removePage', {
+    axios.post('/api/removePage', {
       pageID: statedPageID
     })
       .then(userContext.getData)

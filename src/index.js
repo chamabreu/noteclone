@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://api.simplenote.jmbcode.de/api'
+axios.defaults.baseURL = 'https://api.simplenote.jmbcode.de'
 axios.defaults.withCredentials = true
 
 ReactDOM.render(
