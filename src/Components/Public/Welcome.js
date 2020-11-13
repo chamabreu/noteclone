@@ -1,7 +1,14 @@
+/* MODULES */
 import { useContext} from "react"
 import { Link } from "react-router-dom"
+
+/* Other */
 import UserContext from "../../Context/UserContext"
 
+
+/* WELCOME PAGE / PUBLIC PAGE */
+/* Client only gets here if he is not authed */
+/* Just simple functions, no UI yet */
 export default function Welcome() {
   const userContext = useContext(UserContext)
 

@@ -1,13 +1,19 @@
+/* MODULES */
+import { useContext, useState } from 'react'
+import axios from 'axios'
+
+/* Components */
+import SBPageContent from './SBPage/SBPageContent'
+
+
+/* Other */
 import './SideBarStyles.css'
 import './SBAccountHeaderStyle.css'
 import './SBContentSectionStyle.css'
-import { useContext, useState } from 'react'
 import UserContext from '../../../Context/UserContext'
-import SBPageContent from './SBPage/SBPageContent'
-import axios from 'axios'
 
 
-
+/* The sidebar in the main div */
 export default function SideBar() {
   const userContext = useContext(UserContext)
   const [sbOpened, setSBOpened] = useState(true)

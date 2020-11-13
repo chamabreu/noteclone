@@ -1,9 +1,13 @@
+/* MODULES */
 import { useContext, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
-import UserContext from "../../Context/UserContext"
 import axios from 'axios'
 
+/* Other */
+import UserContext from "../../Context/UserContext"
 
+/* LOGIN PAGE */
+/* JUST SIMPLE SETUP, NEEDS UI */
 export default function Login() {
   const [error, setError] = useState(undefined)
   const [email, setEmail] = useState("")

@@ -1,7 +1,14 @@
+/* MODULES */
 import { useContext, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+
+
+
+/* Other */
 import UserContext from "../../../../../Context/UserContext"
 
+
+/* A sidebare single Page - calls itself for nested pages */
 export default function SBPage(props) {
   const userContext = useContext(UserContext)
   const [openState, setOpenState] = useState(props.opened)

@@ -1,9 +1,21 @@
+/* MODULES */
 import './SBPageContentStyle.css'
-import SBPage from './Page/SBPage'
 import { useParams } from 'react-router-dom'
 import { useContext } from 'react'
+
+
+/* Components */
+import SBPage from './Page/SBPage'
+
+
+/* Other */
 import UserContext from '../../../../Context/UserContext'
 
+
+/*
+  Sidebar Section of the Pages - here are the "Top-Level-Pages" called as SBPage 
+  the SBPages calls then itself multiple times for the other subpages -> look SBPage.js
+*/
 export default function SBPageContent(props) {
   const userContext = useContext(UserContext)
 
@@ -29,27 +41,27 @@ export default function SBPageContent(props) {
       for (const subPage of Object.keys(checkPages)) {
         let nestedPages = getSubPages(userContext.data[subPage].pages)
         // console.log("Found nestedPages", nestedPages)
-  
-  
+
+
         if (pageURL === subPage) {
           // console.log("Page URL", pageURL, "and subPage", subPage,  "matches")
           return true
-  
-  
-        }else {
+
+
+        } else {
           // console.log("NOPE! Page URL", pageURL, "and subPage", subPage,  "Dont match")
-  
+
           if (Object.keys(nestedPages).length !== 0) {
             // console.log("------------------ nestedPages Contains")
             if (containsURL(nestedPages)) {
               return true
             }
-          }else {
+          } else {
             continue
           }
         }
       }
-    }else {
+    } else {
       return false
     }
   }

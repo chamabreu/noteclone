@@ -1,7 +1,11 @@
-import axios from "axios"
-import { useState } from "react"
+/* MODULES */
 import { Link, useHistory } from "react-router-dom"
+import { useState } from "react"
+import axios from "axios"
 
+
+/* REGISTER PAGE */
+/* JUST SIMPLE SETUP, NEEDS UI */
 export default function Register() {
   const [error, setError] = useState(undefined)
   const history = useHistory()
