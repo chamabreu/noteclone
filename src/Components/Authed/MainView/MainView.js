@@ -10,15 +10,15 @@ import PageLink from './PageLink'
 
 /* Other */
 import './MainViewStyle.css'
-import UserContext from '../../../Context/UserContext'
+import StateContext from '../../../Context/StateManager'
 
 
 /* The "Main" part - shows the content of a selected Site (through url :page) */
 export default function MainView() {
-  const userContext = useContext(UserContext)
+  const StateContext = useContext(StateContext)
 
   const initID = useParams().page || null
-  const initPageData = initID ? userContext.data[initID] : null
+  const initPageData = initID ? StateContext.data[initID] : null
   const initName = initPageData ? initPageData.name : ""
   const subPages = initPageData ? initPageData.pages : null
 
@@ -32,14 +32,14 @@ export default function MainView() {
   }
 
   const saveNewName = () => {
-    userContext.updatePageName(statedPageID, statedPageName)
+    StateContext.updatePageName(statedPageID, statedPageName)
   }
 
   const addSubPage = () => {
     axios.post('/api/createSubPage', {
       parentPage: statedPageID
     })
-      .then(userContext.getData)
+      .then(StateContext.getData)
       .catch(err => console.log('err :>> ', err))
   }
 
@@ -47,7 +47,7 @@ export default function MainView() {
     axios.post('/api/removePage', {
       pageID: statedPageID
     })
-      .then(userContext.getData)
+      .then(StateContext.getData)
       .catch(err => console.log('err :>> ', err))
   }
   

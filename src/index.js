@@ -23,14 +23,15 @@ ReactDOM.render(
   /* Router */
   <BrowserRouter>
 
-  {/* State Manager - hold all states used in App */}
+    {/* State Context - hold all states used in App */}
     <StateManager>
 
       {/* The main App */}
       <App />
+
     </StateManager>
   </BrowserRouter>,
-  
+
   /* Render to specified html-element by ID */
   document.getElementById('reactRoot')
 );

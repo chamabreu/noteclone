@@ -1,101 +1,141 @@
 /* MODULES */
-import { useContext, useState } from "react"
-import { Link, useHistory } from "react-router-dom"
-import axios from 'axios'
+import { useReducer, useContext } from "react"
+import { Link } from "react-router-dom"
 
 /* Other */
-import UserContext from "../../Context/UserContext"
+import { DispatchContext, StateContext } from "../../Context/StateManager"
+import { apiLogIn } from '../../Requests/ApiCalls'
+
+
+
+const loginReducer = (state, action) => {
+  switch (action.type) {
+    case "LOGIN":
+      return {
+        ...state,
+        isLoading: true
+      }
+
+    case "FAILED":
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload.error.response.data
+      }
+
+    case "EMAILINPUT":
+      return {
+        ...state,
+        email: action.payload.email
+      }
+
+    case "PASSWORDINPUT":
+      return {
+        ...state,
+        password: action.payload.password
+      }
+
+    default:
+      return state
+  }
+}
+
+const initialState = {
+  isLoading: false,
+  error: "",
+  email: "",
+  password: ""
+}
 
 /* LOGIN PAGE */
 /* JUST SIMPLE SETUP, NEEDS UI */
 export default function Login() {
-  const [error, setError] = useState(undefined)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const globalState = useContext(StateContext)
+  const globalDispatch = useContext(DispatchContext)
 
-  const history = useHistory()
-  const userContext = useContext(UserContext)
-
-  const emailInput = (e) => {
-    setEmail(e.target.value)
-  }
-  const passwordInput = (e) => {
-    setPassword(e.target.value)
-  }
+  const [localState, dispatch] = useReducer(loginReducer, initialState)
+  const { isLoading, error, email, password } = localState
 
 
-  const login = (event) => {
+
+
+
+
+
+
+
+
+  const login = async (event) => {
     event.preventDefault()
 
-    axios.post('/api/login', {
-      email: email,
-      password: password
-    })
-      .then(res => {
-        switch (res.status) {
-          case 200:
-            console.log('res.status :>> ', res.status);
-            userContext.logIn(email)
-            history.push('/')
-            break;
-          case 401:
-            setError(error.response.data)
-            break;
-          default:
-            break;
-        }
-      })
-      .catch(error => {
-        setError(error.response.data)
-      })
+    try {
+      let result = await apiLogIn(email, password)
+      if (!result.error) {
+        globalDispatch({ type: "LOG_IN", payload: {user: result.user} })
+      } else {
+        dispatch({ type: "FAILED", payload: { error: result.error } })
+      }
+
+    } catch (error) {
+      dispatch({ type: "FAILED", payload: { error: error } })
+    }
+
   }
 
-  return (
-    <div>
-      <h1>Login Page.</h1>
-      <span>You are {userContext.authed ? "Authed" : "Not Authed"}</span>
+  if (isLoading) {
+    return (
+      <h1>please wait...</h1>
+    )
+  } else {
+    return (
+      <div>
+        <h1>Login Page.</h1>
 
-      <hr></hr>
+        {globalState.authed ? "Authed" : "FAAAAAIL"}
 
-      <form onSubmit={login}>
-        <input
-          type="text"
-          name="email"
-          id="email"
-          placeholder="email"
-          onChange={emailInput}
-          value={email}>
-        </input>
+        <hr></hr>
+
+        <form onSubmit={login}>
+          <input
+            type="text"
+            name="email"
+            id="email"
+            placeholder="email"
+            onChange={(e) => dispatch({ type: "EMAILINPUT", payload: { email: e.target.value } })}
+            value={email}>
+          </input>
 
 
+          <br></br>
+          <br></br>
+
+          <input
+            type="text"
+            name="password"
+            id="password"
+            placeholder="password"
+            onChange={(e) => dispatch({ type: "PASSWORDINPUT", payload: { password: e.target.value } })}
+            value={password}>
+          </input>
+
+
+          <br></br>
+          <br></br>
+
+          <button type="submit">Login</button>
+        </form>
+
+        {error && <p>{error}</p>}
+
+        <hr></hr>
+        <hr></hr>
+
+        <Link to='/'>Welcome Page</Link>
         <br></br>
-        <br></br>
+        <Link to='/register'>Register</Link>
 
-        <input
-          type="text"
-          name="password"
-          id="password"
-          placeholder="password"
-          onChange={passwordInput}
-          value={password}>
-        </input>
+      </div>
+    )
 
-
-        <br></br>
-        <br></br>
-
-        <button type="submit">Login</button>
-      </form>
-
-      {error && <p>{error}</p>}
-
-      <hr></hr>
-      <hr></hr>
-
-      <Link to='/'>Welcome Page</Link>
-      <br></br>
-      <Link to='/register'>Register</Link>
-
-    </div>
-  )
+  }
 }

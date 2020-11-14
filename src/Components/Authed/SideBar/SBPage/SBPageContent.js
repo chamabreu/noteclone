@@ -9,7 +9,7 @@ import SBPage from './Page/SBPage'
 
 
 /* Other */
-import UserContext from '../../../../Context/UserContext'
+import {StateContext} from '../../../../Context/StateManager'
 
 
 /*
@@ -17,13 +17,13 @@ import UserContext from '../../../../Context/UserContext'
   the SBPages calls then itself multiple times for the other subpages -> look SBPage.js
 */
 export default function SBPageContent(props) {
-  const userContext = useContext(UserContext)
+  const globalState = useContext(StateContext)
 
   const getSubPages = (pageArray) => {
     const subPages = {}
     if (pageArray.length > 0 && pageArray[0] !== "") {
       for (const pageID of pageArray) {
-        subPages[pageID] = userContext.data[pageID].pages
+        subPages[pageID] = globalState.data[pageID].pages
       }
       return subPages
     } else {
@@ -39,7 +39,7 @@ export default function SBPageContent(props) {
     // console.log('checkPages :>> ', checkPages);
     if (Object.keys(checkPages).length > 0) {
       for (const subPage of Object.keys(checkPages)) {
-        let nestedPages = getSubPages(userContext.data[subPage].pages)
+        let nestedPages = getSubPages(globalState.data[subPage].pages)
         // console.log("Found nestedPages", nestedPages)
 
 
@@ -77,7 +77,7 @@ export default function SBPageContent(props) {
         <SBPage
           key={pageID}
           pageID={pageID}
-          name={userContext.data[pageID].name}
+          name={globalState.data[pageID].name}
           pagesList={getSubPages(props.pagesList)[pageID]}
           indentLevel={0}
           opened={opened ? "opened" : "closed"}

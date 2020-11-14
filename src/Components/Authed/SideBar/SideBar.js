@@ -10,12 +10,12 @@ import SBPageContent from './SBPage/SBPageContent'
 import './SideBarStyles.css'
 import './SBAccountHeaderStyle.css'
 import './SBContentSectionStyle.css'
-import UserContext from '../../../Context/UserContext'
+import {StateContext} from '../../../Context/StateManager'
 
 
 /* The sidebar in the main div */
 export default function SideBar() {
-  const userContext = useContext(UserContext)
+  const globalState = useContext(StateContext)
   const [sbOpened, setSBOpened] = useState(true)
   const toggleSideBar = () => {
     setSBOpened(!sbOpened)
@@ -23,9 +23,9 @@ export default function SideBar() {
 
 
   const createNewPage = () => {
-    axios.post('/api/newPage')
-    .then(userContext.getData)
-    .catch(error => console.log('error :>> ', error))
+    // axios.post('/api/newPage')
+    // .then(globalState.getData)
+    // .catch(error => console.log('error :>> ', error))
 
   }
 
@@ -38,7 +38,7 @@ export default function SideBar() {
           <div className="accountSection">
             <div className="accountHeader">
               <div className="accountName">
-                Acount-Name: {userContext.user}
+                Acount-Name: {globalState.user}
               </div>
 
               <button id="closeSideBarButton" onClick={toggleSideBar}>
@@ -63,15 +63,15 @@ export default function SideBar() {
 
 
           <div className="pagesContainer">
-            {userContext.data.pages.length === 0
+            {globalState.data.pages.length === 0
               ? "You have no Pages so far"
-              : <SBPageContent pagesList={userContext.data.pages} />
+              : <SBPageContent pagesList={globalState.data.pages} />
             }
           </div>
 
         </div>
 
-        <div id="logOutButton" onClick={userContext.logOut}>
+        <div id="logOutButton" onClick={globalState.logOut}>
           Log Me Out
         </div>
 

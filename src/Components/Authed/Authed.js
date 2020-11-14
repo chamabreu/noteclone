@@ -11,28 +11,37 @@ import SideBar from './SideBar/SideBar'
 
 
 /* Other */
-import UserContext from '../../Context/UserContext'
+import { StateContext, DispatchContext } from '../../Context/StateManager'
+import { apiGetData } from '../../Requests/ApiCalls'
 
 
 /* The "main" Component if a user is authed */
 export default function Authed() {
-  const userContext = useContext(UserContext)
+  const globalState = useContext(StateContext)
+  const globalDispatch = useContext(DispatchContext)
 
 
   /* Call this on every rerender. */
   useEffect(() => {
     /*
-      Conditionally check if there is data in the userContext.
+      Conditionally check if there is data in the StateContext.
       Normally there should NEVER be no data, but for exception just try to get some
     */
-    if (!userContext.data) {
-      userContext.getData()
+    if (!globalState.data) {
+      apiGetData(globalState.user)
+        .then(result => {
+          globalDispatch({ type: "SET_DATA", payload: { data: result.data, user: result.user } })
+        })
+        .catch(error => {
+          globalDispatch({ type: "RESET" })
+          console.log('error :>> ', error)
+        })
     }
   })
 
 
   /* Let the user "wait for data" if there (never should) is no data */
-  if (!userContext.data) {
+  if (!globalState.data) {
     return (
       <h1>Waiting for Data</h1>
     )
@@ -42,18 +51,19 @@ export default function Authed() {
     return (
       <main>
         <Switch>
-          
+          {/* <h1>Authed Page</h1> */}
+
           {/* The "home" of the site */}
           <Route exact path="/">
             <SideBar />
-            <MainView />
+            {/* <MainView /> */}
           </Route>
 
 
           {/* the specific page view */}
           <Route path="/:page">
             <SideBar />
-            <MainView />
+            {/* <MainView /> */}
           </Route>
 
 

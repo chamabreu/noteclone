@@ -1,22 +1,22 @@
 /* MODULES */
-import { useContext} from "react"
+import { useContext } from "react"
 import { Link } from "react-router-dom"
 
 /* Other */
-import UserContext from "../../Context/UserContext"
+import { StateContext } from "../../Context/StateManager"
 
 
 /* WELCOME PAGE / PUBLIC PAGE */
 /* Client only gets here if he is not authed */
 /* Just simple functions, no UI yet */
 export default function Welcome() {
-  const userContext = useContext(UserContext)
+  const state = useContext(StateContext)
 
 
   return (
     <div>
-      {userContext.authed
-        ? <h1>Welcome. You are logged in, {userContext.user}.</h1>
+      {state.authed
+        ? <h1>Welcome. You are logged in, {state.user}.</h1>
         : <h1>Welcome. Please log in.</h1>
       }
       <hr></hr>
