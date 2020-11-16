@@ -1,15 +1,10 @@
 /* Modules */
 import { useReducer, createContext } from 'react';
-
 /* Other */
-import { allReducer } from './reducer';
+import { allReducer } from './DispatchManager';
 
 
 const initialState = {
-  /* Loading State for TopLevel App */
-  mainPageLoading: false,
-
-
   /* authed is true if a user is logged in / browser sends cookie with serversession */
   authed: false,
 
@@ -42,14 +37,6 @@ export default function State(props) {
    */
   const [state, dispatch] = useReducer(allReducer, initialState)
 
-  /*
-    useEffect gets only called once because of the [].
-    It should getData on a reload or initial call of the App
-  */
-  // useEffect(() => {
-  //   getData()
-  // }, [])
-
 
   /* Render the stuff */
   return (
@@ -60,6 +47,7 @@ export default function State(props) {
 
         {/* Render the children which gets passed by the parent caller -> index.js */}
         {props.children}
+
 
       </StateContext.Provider>
     </DispatchContext.Provider>

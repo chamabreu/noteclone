@@ -36,26 +36,22 @@ export default function SBPageContent(props) {
 
   // Cycle in the forLoop through all subpages and check if there is such an :page
   const containsURL = (checkPages) => {
-    // console.log('checkPages :>> ', checkPages);
     if (Object.keys(checkPages).length > 0) {
       for (const subPage of Object.keys(checkPages)) {
         let nestedPages = getSubPages(globalState.data[subPage].pages)
-        // console.log("Found nestedPages", nestedPages)
 
 
         if (pageURL === subPage) {
-          // console.log("Page URL", pageURL, "and subPage", subPage,  "matches")
           return true
 
 
         } else {
-          // console.log("NOPE! Page URL", pageURL, "and subPage", subPage,  "Dont match")
-
           if (Object.keys(nestedPages).length !== 0) {
-            // console.log("------------------ nestedPages Contains")
             if (containsURL(nestedPages)) {
               return true
             }
+
+
           } else {
             continue
           }
@@ -90,7 +86,6 @@ export default function SBPageContent(props) {
 
   return (
     <div className="projectContent">
-      {/* <p>Components</p> */}
       {childPages}
     </div>
   )

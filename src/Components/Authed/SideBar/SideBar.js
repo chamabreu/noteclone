@@ -1,6 +1,6 @@
 /* MODULES */
 import { useContext, useState } from 'react'
-import axios from 'axios'
+import axios from 'axios';
 
 /* Components */
 import SBPageContent from './SBPage/SBPageContent'
@@ -10,12 +10,15 @@ import SBPageContent from './SBPage/SBPageContent'
 import './SideBarStyles.css'
 import './SBAccountHeaderStyle.css'
 import './SBContentSectionStyle.css'
-import {StateContext} from '../../../Context/StateManager'
+import { DispatchContext, StateContext } from '../../../Context/StateManager'
+import { NEW_PAGE } from '../../../Context/DispatchManager';
 
 
 /* The sidebar in the main div */
 export default function SideBar() {
   const globalState = useContext(StateContext)
+  const globalDispatch = useContext(DispatchContext)
+
   const [sbOpened, setSBOpened] = useState(true)
   const toggleSideBar = () => {
     setSBOpened(!sbOpened)
@@ -23,9 +26,11 @@ export default function SideBar() {
 
 
   const createNewPage = () => {
-    // axios.post('/api/newPage')
-    // .then(globalState.getData)
-    // .catch(error => console.log('error :>> ', error))
+    axios.post('/api/newPage')
+      .then((result) => {
+        globalDispatch({ type: NEW_PAGE, payload: result.data})
+      })
+      .catch(error => console.log('error :>> ', error))
 
   }
 
@@ -71,7 +76,11 @@ export default function SideBar() {
 
         </div>
 
-        <div id="logOutButton" onClick={globalState.logOut}>
+        <div id="logOutButton" onClick={() => {
+          axios.post('/api/logout')
+            .then(() => globalDispatch({ type: "LOG_OUT" }))
+            .catch((error) => console.log('error :>> ', error))
+        }}>
           Log Me Out
         </div>
 

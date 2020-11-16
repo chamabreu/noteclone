@@ -28,6 +28,7 @@ ReactDOM.render(
 
       {/* The main App */}
       <App />
+      {/* <PhantomApp/> */}
 
     </StateManager>
   </BrowserRouter>,

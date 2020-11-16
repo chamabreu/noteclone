@@ -1,6 +1,7 @@
 /* Modules */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
+import axios from 'axios'
 
 
 
@@ -15,13 +16,14 @@ import Authed from './Components/Authed/Authed';
 /* Other */
 import './AppStyle.css'
 import { DispatchContext, StateContext } from './Context/StateManager';
-import { apiGetData } from './Requests/ApiCalls'
+import { AUTHED } from './Context/DispatchManager'
 
 
 
 
 /* The main Component of the App */
 export default function App() {
+  const [isLoading, setisLoading] = useState(true)
 
   /* get the StateContext */
   const globalState = useContext(StateContext)
@@ -29,19 +31,29 @@ export default function App() {
 
 
   useEffect(() => {
-    apiGetData(globalState.user)
+    axios.post('/api/authedStatus')
       .then(result => {
-        globalDispatch({ type: "SET_DATA", payload: { data: result.data, user: result.user } })
+        if (result.status === 200) {
+          globalDispatch({ type: AUTHED, payload: { user: result.data } })
+          setisLoading(false)
+        } else {
+          setisLoading(false)
+          throw new Error(result.status)
+        }
       })
       .catch(error => {
-        globalDispatch({ type: "RESET" })
+        setisLoading(false)
         console.log('error :>> ', error)
       })
-  }, [])
+
+  }, [globalDispatch])
 
 
+
+
+  
   /* Render in dependency of the loading state */
-  if (globalState.mainPageLoading) {
+  if (isLoading) {
     return (
       null
     )

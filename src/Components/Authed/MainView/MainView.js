@@ -1,7 +1,7 @@
 /* MODULES */
 import { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import axios from 'axios';
 
 
 /* Components */
@@ -10,65 +10,100 @@ import PageLink from './PageLink'
 
 /* Other */
 import './MainViewStyle.css'
-import StateContext from '../../../Context/StateManager'
+import { DispatchContext, StateContext } from '../../../Context/StateManager'
+import { NEW_SUBPAGE, REMOVE_PAGE, UPDATE_PAGE_NAME } from '../../../Context/DispatchManager';
 
 
 /* The "Main" part - shows the content of a selected Site (through url :page) */
 export default function MainView() {
-  const StateContext = useContext(StateContext)
+  const globalState = useContext(StateContext)
+  const globalDispatch = useContext(DispatchContext)
 
-  const initID = useParams().page || null
-  const initPageData = initID ? StateContext.data[initID] : null
-  const initName = initPageData ? initPageData.name : ""
-  const subPages = initPageData ? initPageData.pages : null
+  const pageID = useParams().page || null
+  const pageData = globalState.data[pageID] || null
+  const subPages = pageData ? pageData.pages : null
 
-  const [statedPageID, setStatedPageID] = useState(initID || null)
-  const [statedPageName, setStatedPageName] = useState(initName)
+  const originalPageName = pageData ? pageData.name : null
+  const [updatedPageName, setUpdatedPageName] = useState(originalPageName)
 
-
-
-  const changePageName = (event) => {
-    setStatedPageName(event.target.value)
-  }
-
-  const saveNewName = () => {
-    StateContext.updatePageName(statedPageID, statedPageName)
-  }
-
-  const addSubPage = () => {
-    axios.post('/api/createSubPage', {
-      parentPage: statedPageID
-    })
-      .then(StateContext.getData)
-      .catch(err => console.log('err :>> ', err))
-  }
-
-  const deletePage = () => {
-    axios.post('/api/removePage', {
-      pageID: statedPageID
-    })
-      .then(StateContext.getData)
-      .catch(err => console.log('err :>> ', err))
-  }
-  
   useEffect(() => {
-    setStatedPageID(initID)
-    setStatedPageName(initName)
-    // setStatedPageData(initPageData)
-  }, [initID, initName/* , initPageData */])
+    setUpdatedPageName(originalPageName)
+  }, [originalPageName])
 
-  if (statedPageID && initPageData) {
+
+  const saveNewName = async () => {
+    try {
+
+      let result = await axios.post('/api/updatePageName', {
+        pageID: pageID,
+        newName: updatedPageName
+      })
+      if (result.status === 200) {
+        globalDispatch({ type: UPDATE_PAGE_NAME, payload: result.data })
+
+      } else {
+        throw new Error("UNCATEGORIZED")
+      }
+
+    } catch (error) {
+
+      console.log("error saving the new name", error)
+    }
+
+  }
+
+  const addSubPage = async () => {
+    try {
+
+      let result = await axios.post('/api/createSubPage', {
+        parentPage: pageID
+      })
+      if (result.status === 200) {
+        globalDispatch({ type: NEW_SUBPAGE, payload: result.data })
+
+      } else {
+        throw new Error("UNCATEGORIZED")
+      }
+
+    } catch (error) {
+
+      console.log("error creating NEW_SUBPAGE", error)
+    }
+
+  }
+
+  const deletePage = async () => {
+    try {
+
+      let result = await axios.post('/api/removePage', {
+        pageID: pageID
+      })
+      if (result.status === 200) {
+        globalDispatch({ type: REMOVE_PAGE, payload: result.data })
+
+      } else {
+        throw new Error("UNCATEGORIZED")
+      }
+
+    } catch (error) {
+
+      console.log("error creating REMOVE_PAGE", error)
+    }
+
+  }
+
+  if (pageID && pageData) {
     return (
       <div id="mainView">
         <div id="mvPageHeader">
           <input
             type="text"
-            value={statedPageName}
-            onChange={changePageName}
+            value={updatedPageName}
+            onChange={(event) => setUpdatedPageName(event.target.value)}
             style={{ fontSize: "30px", border: "none", outline: "none", backgroundColor: "lightgray" }}
           />
 
-          {(statedPageName !== initName)
+          {(updatedPageName !== originalPageName)
             ? <button onClick={saveNewName}>Save Name</button>
             : null
           }
@@ -80,7 +115,7 @@ export default function MainView() {
 
 
         <div id="mvSubPages">
-          {initName} has {subPages.length} subpages.
+          {updatedPageName} has {subPages.length} subpages.
           <button onClick={addSubPage}>Add SubPage</button>
           <p>List of Subpages</p>
           {subPages.map(sp => {
@@ -110,11 +145,11 @@ export default function MainView() {
         </div>
       </div>
     )
-  } else if (statedPageID && !initPageData) {
+  } else if (pageID && !pageData) {
     return (
       <div id="mainView">
         <div id="mvPageHeader">
-          <p>{statedPageID} does not exist.</p>
+          <p>{pageID} does not exist.</p>
         </div>
       </div>
     )

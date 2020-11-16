@@ -1,51 +1,12 @@
 /* MODULES */
 import { useReducer, useContext } from "react"
-import { Link } from "react-router-dom"
-
+import { Link, useHistory } from "react-router-dom"
+import axios from 'axios';
 /* Other */
 import { DispatchContext, StateContext } from "../../Context/StateManager"
-import { apiLogIn } from '../../Requests/ApiCalls'
+import { loginReducer } from '../../Context/LogInReducer'
+import { AUTHED } from "../../Context/DispatchManager";
 
-
-
-const loginReducer = (state, action) => {
-  switch (action.type) {
-    case "LOGIN":
-      return {
-        ...state,
-        isLoading: true
-      }
-
-    case "FAILED":
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload.error.response.data
-      }
-
-    case "EMAILINPUT":
-      return {
-        ...state,
-        email: action.payload.email
-      }
-
-    case "PASSWORDINPUT":
-      return {
-        ...state,
-        password: action.payload.password
-      }
-
-    default:
-      return state
-  }
-}
-
-const initialState = {
-  isLoading: false,
-  error: "",
-  email: "",
-  password: ""
-}
 
 /* LOGIN PAGE */
 /* JUST SIMPLE SETUP, NEEDS UI */
@@ -53,31 +14,34 @@ export default function Login() {
   const globalState = useContext(StateContext)
   const globalDispatch = useContext(DispatchContext)
 
-  const [localState, dispatch] = useReducer(loginReducer, initialState)
-  const { isLoading, error, email, password } = localState
+  const [logInState, logInDisptach] = useReducer(
+    loginReducer,
+    {
+      isLoading: false,
+      error: "",
+      email: "",
+      password: ""
+    }
+  )
+  const { isLoading, error, email, password } = logInState
 
-
-
-
-
-
-
-
+  const history = useHistory()
 
 
   const login = async (event) => {
     event.preventDefault()
 
     try {
-      let result = await apiLogIn(email, password)
-      if (!result.error) {
-        globalDispatch({ type: "LOG_IN", payload: {user: result.user} })
+      let result = await axios.post(('/api/login'), { email: email, password: password })
+      if (result.status === 200) {
+        globalDispatch({ type: AUTHED, payload: { user: result.user } })
+        history.push('/')
       } else {
-        dispatch({ type: "FAILED", payload: { error: result.error } })
+        logInDisptach({ type: "FAILED", payload: { error: result.error } })
       }
 
     } catch (error) {
-      dispatch({ type: "FAILED", payload: { error: error } })
+      logInDisptach({ type: "FAILED", payload: { error: error } })
     }
 
   }
@@ -101,9 +65,9 @@ export default function Login() {
             name="email"
             id="email"
             placeholder="email"
-            onChange={(e) => dispatch({ type: "EMAILINPUT", payload: { email: e.target.value } })}
-            value={email}>
-          </input>
+            onChange={(e) => logInDisptach({ type: "EMAILINPUT", payload: { email: e.target.value } })}
+            value={email}
+          />
 
 
           <br></br>
@@ -114,9 +78,9 @@ export default function Login() {
             name="password"
             id="password"
             placeholder="password"
-            onChange={(e) => dispatch({ type: "PASSWORDINPUT", payload: { password: e.target.value } })}
-            value={password}>
-          </input>
+            onChange={(e) => logInDisptach({ type: "PASSWORDINPUT", payload: { password: e.target.value } })}
+            value={password}
+          />
 
 
           <br></br>

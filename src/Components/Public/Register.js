@@ -7,13 +7,13 @@ import axios from "axios"
 /* REGISTER PAGE */
 /* JUST SIMPLE SETUP, NEEDS UI */
 export default function Register() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState(undefined)
   const history = useHistory()
 
   const register = (event) => {
     event.preventDefault()
-    const email = event.target.email.value
-    const password = event.target.password.value
 
     axios.post('/api/register', {
       email: email,
@@ -40,10 +40,24 @@ export default function Register() {
       <Link to='/login'>Login</Link>
 
       <form onSubmit={register}>
-        <input type="text" name="email" id="email" placeholder="email"></input>
+        <input
+          type="text"
+          name="email"
+          id="email"
+          placeholder="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
         <br></br>
         <br></br>
-        <input type="text" name="password" id="password" placeholder="password"></input>
+        <input
+          type="text"
+          name="password"
+          id="password"
+          placeholder="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
         <br></br>
         <br></br>
         <button type="submit">Register</button>

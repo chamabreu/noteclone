@@ -12,7 +12,7 @@ import SideBar from './SideBar/SideBar'
 
 /* Other */
 import { StateContext, DispatchContext } from '../../Context/StateManager'
-import { apiGetData } from '../../Requests/ApiCalls'
+import axios from 'axios'
 
 
 /* The "main" Component if a user is authed */
@@ -28,16 +28,16 @@ export default function Authed() {
       Normally there should NEVER be no data, but for exception just try to get some
     */
     if (!globalState.data) {
-      apiGetData(globalState.user)
+      axios.post('/api/getData')
         .then(result => {
-          globalDispatch({ type: "SET_DATA", payload: { data: result.data, user: result.user } })
+          globalDispatch({ type: "SET_DATA", payload: result.data })
         })
         .catch(error => {
           globalDispatch({ type: "RESET" })
           console.log('error :>> ', error)
         })
     }
-  })
+  }, [globalState.data, globalDispatch])
 
 
   /* Let the user "wait for data" if there (never should) is no data */
@@ -51,19 +51,18 @@ export default function Authed() {
     return (
       <main>
         <Switch>
-          {/* <h1>Authed Page</h1> */}
 
           {/* The "home" of the site */}
           <Route exact path="/">
             <SideBar />
-            {/* <MainView /> */}
+            <MainView />
           </Route>
 
 
           {/* the specific page view */}
           <Route path="/:page">
             <SideBar />
-            {/* <MainView /> */}
+            <MainView />
           </Route>
 
 

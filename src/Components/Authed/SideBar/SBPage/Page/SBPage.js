@@ -5,13 +5,15 @@ import { Link, useParams } from "react-router-dom"
 
 
 /* Other */
-import {StateContext} from "../../../../../Context/StateManager"
+import { StateContext } from "../../../../../Context/StateManager"
 
 
 /* A sidebare single Page - calls itself for nested pages */
 export default function SBPage(props) {
   const globalState = useContext(StateContext)
-  const [openState, setOpenState] = useState(props.opened)
+
+  
+  const [pageOpen, setPageOpen] = useState(props.opened)
   const pageURL = useParams().page
 
   const isCurrentSite = (pageURL === props.pageID) ? "active" : ""
@@ -32,26 +34,22 @@ export default function SBPage(props) {
 
   // Cycle in the forLoop through all subpages and check if there is such an :page
   const containsURL = (checkPages) => {
-    // console.log('checkPages :>> ', checkPages);
     if (Object.keys(checkPages).length > 0) {
       for (const subPage of Object.keys(checkPages)) {
         let nestedPages = getSubPages(globalState.data[subPage].pages)
-        // console.log("Found nestedPages", nestedPages)
 
 
         if (pageURL === subPage) {
-          // console.log("Page URL", pageURL, "and subPage", subPage,  "matches")
           return true
 
 
         } else {
-          // console.log("NOPE! Page URL", pageURL, "and subPage", subPage,  "Dont match")
-
           if (Object.keys(nestedPages).length !== 0) {
-            // console.log("------------------ nestedPages Contains")
             if (containsURL(nestedPages)) {
               return true
             }
+
+
           } else {
             continue
           }
@@ -63,13 +61,13 @@ export default function SBPage(props) {
   }
 
   const openPageContent = () => {
-    openState === "closed" ? setOpenState("opened") : setOpenState("closed")
+    pageOpen === "closed" ? setPageOpen("opened") : setPageOpen("closed")
   }
 
 
   let childPages = []
   for (const pageID of Object.keys(getSubPages(props.pagesList))) {
-    let opened = isCurrentSite === "active" ? containsURL(getSubPages([pageID])) : false
+    let subPageOpened = containsURL(getSubPages([pageID])) ? true : false
 
     childPages.push(
       <SBPage
@@ -78,17 +76,17 @@ export default function SBPage(props) {
         name={globalState.data[pageID].name}
         pagesList={getSubPages(props.pagesList)[pageID]}
         indentLevel={props.indentLevel + 1}
-        opened={opened ? "opened" : "closed"}
+        opened={subPageOpened ? "opened" : "closed"}
       />
     )
   }
 
 
 
-  if (openState === "opened") {
+  if (pageOpen === "opened") {
     return (
       <div className="pageBox">
-        <div className={`pageHead ${isCurrentSite} ${openState}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
+        <div className={`pageHead ${isCurrentSite} ${pageOpen}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
           <div className="pageFlex">
             <button className="pageIndicator" onClick={openPageContent}>
               <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" className="svg-inline--fa fa-caret-right fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
@@ -97,20 +95,32 @@ export default function SBPage(props) {
           </div>
         </div>
 
-        <div className="pageChilds">
-          {childPages.length === 0
-            ? <span className="noSubPage" style={{ paddingLeft: `${props.indentLevel + 1}rem` }}>
-              No Subpages
+        {pageOpen === "opened"
+
+          ? <div className="pageChilds">
+
+
+            {childPages.length === 0
+              ? <span className="noSubPage" style={{ paddingLeft: `${props.indentLevel + 1}rem` }}>
+                No Subpages
             </span>
-            : childPages
-          }
-        </div>
+
+
+              : childPages
+            }
+
+
+          </div>
+          : null
+
+
+        }
       </div>
     )
   } else {
     return (
       <div className="pageBox">
-        <div className={`pageHead ${isCurrentSite} ${openState}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
+        <div className={`pageHead ${isCurrentSite} ${pageOpen}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
           <div className="pageFlex">
             <button className="pageIndicator" onClick={openPageContent}>
               <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" className="svg-inline--fa fa-caret-right fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
