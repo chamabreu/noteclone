@@ -8,7 +8,12 @@ export const REMOVE_PAGE = "REMOVE_PAGE"
 export const UPDATE_PAGE_NAME = "UPDATE_PAGE_NAME"
 export const RESET = "RESET"
 
-const initialState = {
+
+/*
+  Initial State of the App.
+  It's used to "reset" the app, if the user is logged out
+*/
+export const initialState = {
 
   /* authed is true if a user is logged in / browser sends cookie with serversession */
   authed: false,
@@ -27,14 +32,13 @@ const initialState = {
 }
 
 
-export const allReducer = (state, action) => {
+export const appReducer = (state, action) => {
   switch (action.type) {
 
 
 
     /* AUTHED BY COOKIE */
     case AUTHED:
-      console.log("AUTHED ALLREDUCER")
       return { ...state, authed: true, user: action.payload.user }
 
 
@@ -42,43 +46,31 @@ export const allReducer = (state, action) => {
     /* -------------------------------- */
     /* LOG USER OUT */
     case LOG_OUT:
-      console.log("LOG_OUT ALLREDUCER")
       return initialState
 
 
 
 
 
+    /* Fallthrough Switch. Maybe define later more details, for now just "update" the data. */
     /* -------------------------------- */
     /* CREATE NEW TOP PAGE */
-    case NEW_PAGE:
-      console.log("NEW_PAGE ALLREDUCER")
-      return { ...state, data: action.payload.data }
-
+    case NEW_PAGE: // Fallthrough
 
 
     /* -------------------------------- */
     /* CREATE SUBPAGE */
-    case NEW_SUBPAGE:
-      console.log("NEW_SUBPAGE ALLREDUCER")
-      return { ...state, data: action.payload.data }
-
-
+    case NEW_SUBPAGE: // Fallthrough
 
 
     /* -------------------------------- */
     /* RENAME A PAGE */
-    case UPDATE_PAGE_NAME:
-      console.log("UPDATE_PAGE_NAME ALLREDUCER")
-      return { ...state, data: action.payload.data }
-
-
+    case UPDATE_PAGE_NAME: // Fallthrough
 
 
     /* -------------------------------- */
     /* REMOVE A PAGE */
     case REMOVE_PAGE:
-      console.log("REMOVE_PAGE ALLREDUCER")
       return { ...state, data: action.payload.data }
 
 
@@ -86,7 +78,6 @@ export const allReducer = (state, action) => {
     /* -------------------------------- */
     /* GET DATA OF USER */
     case SET_DATA:
-      console.log("SET_DATA ALLREDUCER")
       return { ...state, authed: true, data: action.payload.data, user: action.payload.user }
 
 
@@ -95,17 +86,12 @@ export const allReducer = (state, action) => {
     /* -------------------------------- */
     /* CHANGE A NAME OF A PAGE */
     case RESET:
-      console.log("RESET ALLREDUCER")
       return initialState
-
-
-    // return updatePageName(action.pageID, action.newName, state)
 
 
     /* -------------------------------- */
     /* NO ACTiON MATCHES RETURN STATE */
     default:
-      console.log("DEFAULT ALLREDUCER")
       return state
   }
 }

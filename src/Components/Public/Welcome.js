@@ -15,9 +15,12 @@ export default function Welcome() {
 
   return (
     <div>
-      {state.authed
-        ? <h1>Welcome. You are logged in, {state.user}.</h1>
-        : <h1>Welcome. Please log in.</h1>
+      {!state.authed
+        /* This is the default output */
+        ? <h1>Welcome. Please log in.</h1>
+
+        /* This line should never get executed, becaue client cant get here in authed state */
+        : <h1>Welcome. You are logged in, {state.user}.</h1>
       }
       <hr></hr>
       <Link to='/login'>Login</Link>

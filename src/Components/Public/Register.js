@@ -7,30 +7,43 @@ import axios from "axios"
 /* REGISTER PAGE */
 /* JUST SIMPLE SETUP, NEEDS UI */
 export default function Register() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState(undefined)
   const history = useHistory()
 
-  const register = (event) => {
+  /* Set local states, could also implement reducer like in Login? */
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+
+
+  /* Client pressed register */
+  const registerPressed = async (event) => {
     event.preventDefault()
 
-    axios.post('/api/register', {
-      email: email,
-      password: password
-    })
-      .then(result => {
-        if (result.status === 200) {
-          history.push('/login')
-        } else {
-          setError("Something went wrong", result)
-        }
+    /* Axios call to API */
+    try {
+      let result = await axios.post('/api/register', {
+        email: email,
+        password: password
       })
-      .catch(error => {
-        setError(error.response.data)
 
-      })
+      /* Handle result */
+      if (result.status === 200) {
+        /* Push to Login Page */
+        history.push('/login')
+
+        /* ?? NEED TO HANDLE THIS ?? */
+      } else {
+        /* Set local state with error */
+        setError("Something went wrong", result)
+      }
+
+      /* Catch errors */
+    } catch (error) {
+      /* Set local state with error */
+      setError(error.response.data)
+    }
   }
+
 
   return (
     <div>
@@ -39,7 +52,7 @@ export default function Register() {
       <br></br>
       <Link to='/login'>Login</Link>
 
-      <form onSubmit={register}>
+      <form onSubmit={registerPressed}>
         <input
           type="text"
           name="email"
@@ -62,6 +75,8 @@ export default function Register() {
         <br></br>
         <button type="submit">Register</button>
       </form>
+
+      {/* If a Error exists, failed credentials or server error, it gets display here */}
       {error && <p>{error}</p>}
     </div>
   )

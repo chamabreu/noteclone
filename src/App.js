@@ -23,24 +23,34 @@ import { AUTHED } from './Context/DispatchManager'
 
 /* The main Component of the App */
 export default function App() {
+  /* local State */
   const [isLoading, setisLoading] = useState(true)
 
-  /* get the StateContext */
+  /* get the global Contexts */
   const globalState = useContext(StateContext)
   const globalDispatch = useContext(DispatchContext)
 
 
+  /* use an initial Call on App Render to check if user is logged in via cookie */
   useEffect(() => {
     axios.post('/api/authedStatus')
       .then(result => {
+
+        /* If he is */
         if (result.status === 200) {
+          /* Set global State to authed and set user state */
           globalDispatch({ type: AUTHED, payload: { user: result.data } })
+          /* set local state */
           setisLoading(false)
+
+          /* handle anything else */
         } else {
           setisLoading(false)
           throw new Error(result.status)
         }
       })
+
+      /* Handle error */
       .catch(error => {
         setisLoading(false)
         console.log('error :>> ', error)

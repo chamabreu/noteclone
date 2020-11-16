@@ -4,8 +4,7 @@ export default function PageLink(props) {
   return (
     <>
       <div>
-        Go:
-    <Link to={`/${props.name}`} style={{ textDecoration: "none", color: "inherit", backgroundColor: "lightblue" }}>
+        <Link to={`/${props.name}`} style={{ textDecoration: "none", color: "inherit", backgroundColor: "lightblue" }}>
           {props.name}
         </Link>
       </div>

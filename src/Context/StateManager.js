@@ -1,48 +1,32 @@
 /* Modules */
 import { useReducer, createContext } from 'react';
+
+
 /* Other */
-import { allReducer } from './DispatchManager';
+import { appReducer, initialState } from './DispatchManager';
 
 
-const initialState = {
-  /* authed is true if a user is logged in / browser sends cookie with serversession */
-  authed: false,
-
-
-  /* holds the user email adress */
-  user: null,
-
-
-  /* 
-  NOTE#002
-    holds the user data. For now, this gets ALL the Data from the database.
-    Maybe this need to be splitted up, to accelerate the speed if large data is saved by user
-   */
-  data: null,
-
-
-}
-
+/* Export StateContext to access the app states */
 export const StateContext = createContext(initialState)
+/* Export DispatchContext to access the app functions (api-calls) */
 export const DispatchContext = createContext()
 
 
 
-/* This describes the StateContext used in the index.js to wrap around the whole App */
-export default function State(props) {
+/* This describes the StateManager used in the index.js to wrap around the whole App */
+export default function StateManager(props) {
 
-  /*
-    set specific states - these get later updated and
-    passed down to the context provider
-   */
-  const [state, dispatch] = useReducer(allReducer, initialState)
+  /* create the global Dispatch reducer */
+  const [state, dispatch] = useReducer(appReducer, initialState)
 
 
   /* Render the stuff */
   return (
 
+    /* Wrap all in the DispatchContext to get access to functions */
     <DispatchContext.Provider value={dispatch}>
 
+      {/* Wrap all in StateContext to get access to states */}
       <StateContext.Provider value={state}>
 
         {/* Render the children which gets passed by the parent caller -> index.js */}

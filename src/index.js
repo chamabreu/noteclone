@@ -23,7 +23,7 @@ ReactDOM.render(
   /* Router */
   <BrowserRouter>
 
-    {/* State Context - hold all states used in App */}
+    {/* StateManager - hold Contexts used in App */}
     <StateManager>
 
       {/* The main App */}

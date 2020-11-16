@@ -1,5 +1,5 @@
 /* MODULES */
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 
 
@@ -10,15 +10,22 @@ import { StateContext } from "../../../../../Context/StateManager"
 
 /* A sidebare single Page - calls itself for nested pages */
 export default function SBPage(props) {
-  const globalState = useContext(StateContext)
 
-  
-  const [pageOpen, setPageOpen] = useState(props.opened)
+  /* This is the pageID from the URL */
   const pageURL = useParams().page
 
+  /* Check if the SBPage is the current selected site to "highlight" it in the sidebar */
   const isCurrentSite = (pageURL === props.pageID) ? "active" : ""
 
+  /* Get Global context */
+  const globalState = useContext(StateContext)
 
+  /* Set local state */
+  const pageOpened = props.opened
+  // const [pageOpened, setPageOpened] = useState(props.opened)
+
+ 
+  /* See SBPageContent Recursive Function */
   const getSubPages = (pageArray) => {
     const subPages = {}
     if (pageArray.length > 0 && pageArray[0] !== "") {
@@ -32,7 +39,7 @@ export default function SBPage(props) {
   }
 
 
-  // Cycle in the forLoop through all subpages and check if there is such an :page
+  /* See SBPageContent Recursive Function */
   const containsURL = (checkPages) => {
     if (Object.keys(checkPages).length > 0) {
       for (const subPage of Object.keys(checkPages)) {
@@ -60,11 +67,9 @@ export default function SBPage(props) {
     }
   }
 
-  const openPageContent = () => {
-    pageOpen === "closed" ? setPageOpen("opened") : setPageOpen("closed")
-  }
 
 
+  /* Create a empty childPages Array to hold all child pages */
   let childPages = []
   for (const pageID of Object.keys(getSubPages(props.pagesList))) {
     let subPageOpened = containsURL(getSubPages([pageID])) ? true : false
@@ -76,61 +81,49 @@ export default function SBPage(props) {
         name={globalState.data[pageID].name}
         pagesList={getSubPages(props.pagesList)[pageID]}
         indentLevel={props.indentLevel + 1}
-        opened={subPageOpened ? "opened" : "closed"}
+        opened={subPageOpened}
       />
     )
   }
 
 
-
-  if (pageOpen === "opened") {
-    return (
-      <div className="pageBox">
-        <div className={`pageHead ${isCurrentSite} ${pageOpen}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
-          <div className="pageFlex">
-            <button className="pageIndicator" onClick={openPageContent}>
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" className="svg-inline--fa fa-caret-right fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
-            </button>
-            <Link to={`/${props.pageID}`} className="pageLabel">{props.name}</Link>
-          </div>
+  /*
+    The Render depends on pageOpened
+    If pageOpened, it shows the subpages, which are alsy SBPage Components
+   */
+  return (
+    /* Creates a pageBox for every page. In it can live multiple subpages as SBPage Components which have their own pageBox etc... */
+    <div className="pageBox">
+      <div className={`pageHead ${isCurrentSite} ${pageOpened ? "opened" : "closed"}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
+        <div className="pageFlex">
+          <button className="pageIndicator" onClick={() => { /* setPageOpened(!pageOpened) */ }}>
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" className="svg-inline--fa fa-caret-right fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
+          </button>
+          <Link to={`/${props.pageID}`} className="pageLabel">{props.name}</Link>
         </div>
-
-        {pageOpen === "opened"
-
-          ? <div className="pageChilds">
+      </div>
 
 
-            {childPages.length === 0
-              ? <span className="noSubPage" style={{ paddingLeft: `${props.indentLevel + 1}rem` }}>
-                No Subpages
+      {pageOpened
+        /* If the page is opened */
+        ? <div className="pageChilds">
+          {/* Check if there are childPages */}
+          {childPages.length !== 0
+
+            /* Render Childpages */
+            ? childPages
+
+            /* Else show "No Subpage" */
+            : <span className="noSubPage" style={{ paddingLeft: `${props.indentLevel + 1}rem` }}>
+              No Subpages
             </span>
-
-
-              : childPages
-            }
-
-
-          </div>
-          : null
-
-
-        }
-      </div>
-    )
-  } else {
-    return (
-      <div className="pageBox">
-        <div className={`pageHead ${isCurrentSite} ${pageOpen}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
-          <div className="pageFlex">
-            <button className="pageIndicator" onClick={openPageContent}>
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" className="svg-inline--fa fa-caret-right fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
-            </button>
-            <Link to={`/${props.pageID}`} className="pageLabel">{props.name}</Link>
-          </div>
+          }
         </div>
-        <div className="pageChilds">
-        </div>
-      </div>
-    )
-  }
+
+        /* If page is closed show nothing under it */
+        : null
+      }
+    </div>
+  )
+
 }
