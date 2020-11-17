@@ -1,6 +1,6 @@
 /* MODULES */
 import { useReducer, useContext } from "react"
-import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom"
+import { Link, useHistory, useLocation } from "react-router-dom"
 
 
 

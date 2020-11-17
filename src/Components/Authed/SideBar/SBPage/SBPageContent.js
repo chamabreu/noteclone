@@ -1,6 +1,5 @@
 /* MODULES */
 import './SBPageContentStyle.css'
-import { useParams } from 'react-router-dom'
 import { useContext } from 'react'
 
 
@@ -19,9 +18,6 @@ import { StateContext } from '../../../../Context/StateManager'
 export default function SBPageContent(props) {
   /* Get global Context */
   const globalState = useContext(StateContext)
-
-  // Get the :page adress - this is always the pageID itself
-  const pageURL = useParams().page
 
 
   /*

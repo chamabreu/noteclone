@@ -1,6 +1,6 @@
 /* Modules */
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, Route, Switch, useParams } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 
 
@@ -23,8 +23,6 @@ import { API } from './Context/ApiCalls';
 
 /* The main Component of the App */
 export default function App() {
-  /* get url if some is given */
-  const pageURL = useParams
   /* local State */
   const [isLoading, setisLoading] = useState(true)
 

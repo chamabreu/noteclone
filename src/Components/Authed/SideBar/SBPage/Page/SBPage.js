@@ -1,5 +1,5 @@
 /* MODULES */
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 
 
