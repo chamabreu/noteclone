@@ -1,6 +1,5 @@
 /* MODULES */
 import { useContext, useState } from 'react'
-import axios from 'axios';
 
 /* Components */
 import SBPageContent from './SBPage/SBPageContent'
@@ -12,6 +11,7 @@ import './SBAccountHeaderStyle.css'
 import './SBContentSectionStyle.css'
 import { DispatchContext, StateContext } from '../../../Context/StateManager'
 import { NEW_PAGE, RESET } from '../../../Context/DispatchManager';
+import { API } from '../../../Context/ApiCalls'
 
 
 /* The sidebar in the main div */
@@ -29,7 +29,7 @@ export default function SideBar() {
   const createNewPage = async () => {
     try {
       /* Set new Page on API and get the new data back*/
-      let result = await axios.post('/api/newPage')
+      let result = await API.newPage() 
 
       /* And "update" the global state with the result */
       globalDispatch({ type: NEW_PAGE, payload: result.data })
@@ -111,7 +111,7 @@ export default function SideBar() {
           </div>
 
           <div id="logOutButton" onClick={() => {
-            axios.post('/api/logout')
+            API.logOut()
               .then(() => globalDispatch({ type: "LOG_OUT" }))
               .catch((error) => console.log('error :>> ', error))
           }}>

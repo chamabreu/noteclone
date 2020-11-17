@@ -1,13 +1,14 @@
 /* MODULES */
 import { useReducer, useContext } from "react"
-import { Link, useHistory } from "react-router-dom"
-import axios from 'axios';
+import { Link, useHistory, useLocation, useRouteMatch } from "react-router-dom"
+
 
 
 /* Other */
-import { DispatchContext, StateContext } from "../../Context/StateManager"
+import { DispatchContext } from "../../Context/StateManager"
 import { loginReducer, LOGIN_FAILED, LOGIN_EMAIL_INPUT, LOGIN_PASSWORD_INPUT, LOGIN_LOGIN } from '../../Context/LogInReducer'
 import { AUTHED } from "../../Context/DispatchManager";
+import { API } from "../../Context/ApiCalls";
 
 
 
@@ -15,10 +16,10 @@ import { AUTHED } from "../../Context/DispatchManager";
 /* JUST SIMPLE SETUP, NEEDS UI */
 export default function Login() {
   const history = useHistory()
+  const pathUrl = useLocation().pathname
 
 
   /* GET GLOBAL CONTEXTS */
-  const globalState = useContext(StateContext)
   const globalDispatch = useContext(DispatchContext)
 
   /* Set local state and reducer */
@@ -43,15 +44,17 @@ export default function Login() {
     /* Set local state */
     localDispatch({ type: LOGIN_LOGIN })
 
-    /* Try axios on API */
+    /* call API */
     try {
-      let result = await axios.post(('/api/login'), { email: email, password: password })
+      let result = await API.logIn(email, password)
 
       /* Handle result */
       if (result.status === 200) {
         /* Set Global state */
         globalDispatch({ type: AUTHED, payload: { user: result.user } })
-        history.push('/')
+        if (pathUrl === "/login") {
+          history.push('/')
+        }
 
         /* ?? NEED TO HANDLE THIS ?? */
       } else {

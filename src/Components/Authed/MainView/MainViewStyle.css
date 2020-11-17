@@ -1,4 +1,20 @@
 #mainView {
   flex-grow: 1;
   padding: 1rem;
+
+
+}
+
+#mvPageContent {
+  height: 60%;
+  width: 90%;
+}
+
+#mvPageText {
+  border: none;
+  background-color: lightsalmon;
+  height: 100%;
+  width: 100%;
+  outline: none;
+  overflow-wrap: break-word;
 }

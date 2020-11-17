@@ -1,7 +1,6 @@
 /* MODULES */
 import { useContext, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import axios from 'axios'
 
 
 
@@ -13,6 +12,7 @@ import SideBar from './SideBar/SideBar'
 
 /* Other */
 import { StateContext, DispatchContext } from '../../Context/StateManager'
+import { API } from '../../Context/ApiCalls'
 
 
 
@@ -30,7 +30,7 @@ export default function Authed() {
       if not, get some
     */
     if (!globalState.data) {
-      axios.post('/api/getData')
+      API.getData()
 
         /* On success set global state with data */
         .then(result => {

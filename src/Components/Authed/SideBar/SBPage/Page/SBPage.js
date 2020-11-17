@@ -20,11 +20,7 @@ export default function SBPage(props) {
   /* Get Global context */
   const globalState = useContext(StateContext)
 
-  /* Set local state */
-  const pageOpened = props.opened
-  // const [pageOpened, setPageOpened] = useState(props.opened)
 
- 
   /* See SBPageContent Recursive Function */
   const getSubPages = (pageArray) => {
     const subPages = {}
@@ -67,12 +63,24 @@ export default function SBPage(props) {
     }
   }
 
+  /* Set local state */
+  const [pageOpened, setPageOpened] = useState(containsURL(getSubPages(props.pagesList)))
+  // useEffect(() => {
+  //   setPageOpened(containsURL(getSubPages(props.pagesList)))
+  // })
+
+
+
+
+
+
+
 
 
   /* Create a empty childPages Array to hold all child pages */
   let childPages = []
   for (const pageID of Object.keys(getSubPages(props.pagesList))) {
-    let subPageOpened = containsURL(getSubPages([pageID])) ? true : false
+    // let subPageOpened = containsURL(getSubPages([pageID])) ? true : false
 
     childPages.push(
       <SBPage
@@ -81,7 +89,6 @@ export default function SBPage(props) {
         name={globalState.data[pageID].name}
         pagesList={getSubPages(props.pagesList)[pageID]}
         indentLevel={props.indentLevel + 1}
-        opened={subPageOpened}
       />
     )
   }
@@ -96,7 +103,7 @@ export default function SBPage(props) {
     <div className="pageBox">
       <div className={`pageHead ${isCurrentSite} ${pageOpened ? "opened" : "closed"}`} style={{ paddingLeft: `${props.indentLevel}rem` }}>
         <div className="pageFlex">
-          <button className="pageIndicator" onClick={() => { /* setPageOpened(!pageOpened) */ }}>
+          <button className="pageIndicator" onClick={() => { setPageOpened(!pageOpened) }}>
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-right" className="svg-inline--fa fa-caret-right fa-w-6" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
           </button>
           <Link to={`/${props.pageID}`} className="pageLabel">{props.name}</Link>
@@ -104,25 +111,23 @@ export default function SBPage(props) {
       </div>
 
 
-      {pageOpened
-        /* If the page is opened */
-        ? <div className="pageChilds">
-          {/* Check if there are childPages */}
-          {childPages.length !== 0
 
-            /* Render Childpages */
-            ? childPages
+      <div className="pageChilds" style={{ display: `${pageOpened ? "" : "none"}` }}>
+        {/* Check if there are childPages */}
+        {childPages.length !== 0
 
-            /* Else show "No Subpage" */
-            : <span className="noSubPage" style={{ paddingLeft: `${props.indentLevel + 1}rem` }}>
-              No Subpages
+          /* Render Childpages */
+          ? childPages
+
+          /* Else show "No Subpage" */
+          : <span className="noSubPage" style={{ paddingLeft: `${props.indentLevel + 1}rem` }}>
+            No Subpages
             </span>
-          }
-        </div>
+        }
+      </div>
 
-        /* If page is closed show nothing under it */
-        : null
-      }
+
+
     </div>
   )
 

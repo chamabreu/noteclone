@@ -6,6 +6,7 @@ export const NEW_PAGE = "NEW_PAGE"
 export const NEW_SUBPAGE = "NEW_SUBPAGE"
 export const REMOVE_PAGE = "REMOVE_PAGE"
 export const UPDATE_PAGE_NAME = "UPDATE_PAGE_NAME"
+export const UPDATE_PAGE_TEXT = "UPDATE_PAGE_TEXT"
 export const RESET = "RESET"
 
 
@@ -60,16 +61,25 @@ export const appReducer = (state, action) => {
 
     /* -------------------------------- */
     /* CREATE SUBPAGE */
+    // eslint-disable-next-line no-fallthrough
     case NEW_SUBPAGE: // Fallthrough
-
-
+    
+    
     /* -------------------------------- */
     /* RENAME A PAGE */
+    // eslint-disable-next-line no-fallthrough
     case UPDATE_PAGE_NAME: // Fallthrough
-
-
+    
+    
+    /* -------------------------------- */
+    /* UPDATE THE PAGE TEXT */
+    // eslint-disable-next-line no-fallthrough
+    case UPDATE_PAGE_TEXT: // Fallthrough
+    
+    
     /* -------------------------------- */
     /* REMOVE A PAGE */
+    // eslint-disable-next-line no-fallthrough
     case REMOVE_PAGE:
       return { ...state, data: action.payload.data }
 

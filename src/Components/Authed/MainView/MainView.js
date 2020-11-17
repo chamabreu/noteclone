@@ -1,17 +1,13 @@
 /* MODULES */
 import { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios';
-
-
-/* Components */
-import PageLink from './PageLink'
 
 
 /* Other */
 import './MainViewStyle.css'
 import { DispatchContext, StateContext } from '../../../Context/StateManager'
-import { NEW_SUBPAGE, REMOVE_PAGE, RESET, UPDATE_PAGE_NAME } from '../../../Context/DispatchManager';
+import { NEW_SUBPAGE, REMOVE_PAGE, RESET, UPDATE_PAGE_NAME, UPDATE_PAGE_TEXT } from '../../../Context/DispatchManager';
+import { API } from '../../../Context/ApiCalls'
 
 
 /* The "Main" part - shows the content of a selected Site (through url :page) */
@@ -23,8 +19,12 @@ export default function MainView() {
   /* Set "initial" data on every render, does not need to be stored in state */
   const pageID = useParams().page || null
   const pageData = globalState.data[pageID] || null
-  const subPages = pageData ? pageData.pages : null
   const originalPageName = pageData ? pageData.name : null
+  const [pageText, setPageText] = useState(pageData ? pageData.data.pageText : "")
+  useEffect(() => {
+    setPageText(pageData ? pageData.data.pageText : "")
+  }, [pageData])
+
 
   /* updatedPageName is used in state for handling userInput in the name input field */
   const [updatedPageName, setUpdatedPageName] = useState(originalPageName)
@@ -35,19 +35,18 @@ export default function MainView() {
   }, [originalPageName])
 
 
-  /* if user changed name and click save */
-  const saveNewName = async () => {
+  /* save the pageText */
+  const savePageText = async (event) => {
+    event.preventDefault()
+
     try {
 
-      /* call api to update name */
-      let result = await axios.post('/api/updatePageName', {
-        pageID: pageID,
-        newName: updatedPageName
-      })
+      /* call api to update pageText */
+      let result = await API.updatePageText(pageID, pageText)
 
       /* If success, set the data in the globalState */
       if (result.status === 200) {
-        globalDispatch({ type: UPDATE_PAGE_NAME, payload: result.data })
+        globalDispatch({ type: UPDATE_PAGE_TEXT, payload: result.data })
 
         /* Handle this??? */
       } else {
@@ -56,13 +55,42 @@ export default function MainView() {
 
       /* Catch errors */
     } catch (error) {
+      console.log('error :>> ', error);
       if (error.response.status === 401) {
-        globalDispatch({type: RESET})
-      }else {
+        globalDispatch({ type: RESET })
+      } else {
         console.log("error saving the new name", error)
       }
     }
+  }
 
+  /* if user changed name and click save */
+  const saveNewName = async (event) => {
+    if (event.key === "Enter") {
+      event.target.blur()
+      try {
+  
+        /* call api to update name */
+        let result = await API.updatePageName(pageID, updatedPageName)
+  
+        /* If success, set the data in the globalState */
+        if (result.status === 200) {
+          globalDispatch({ type: UPDATE_PAGE_NAME, payload: result.data })
+  
+          /* Handle this??? */
+        } else {
+          throw new Error("UNCATEGORIZED")
+        }
+  
+        /* Catch errors */
+      } catch (error) {
+        if (error.response.status === 401) {
+          globalDispatch({ type: RESET })
+        } else {
+          console.log("error saving the new name", error)
+        }
+      }
+    }
   }
 
   /* if user clicks addSubPage */
@@ -70,9 +98,7 @@ export default function MainView() {
     try {
 
       /* call api to create a subpage */
-      let result = await axios.post('/api/createSubPage', {
-        parentPage: pageID
-      })
+      let result = await API.createSubPage(pageID)
 
       /* If success, set the data in the globalState */
       if (result.status === 200) {
@@ -87,8 +113,8 @@ export default function MainView() {
       /* Catch errors */
     } catch (error) {
       if (error.response.status === 401) {
-        globalDispatch({type: RESET})
-      }else {
+        globalDispatch({ type: RESET })
+      } else {
         console.log("error creating NEW_SUBPAGE", error)
       }
     }
@@ -99,9 +125,7 @@ export default function MainView() {
     try {
 
       /* call api to delete a page */
-      let result = await axios.post('/api/removePage', {
-        pageID: pageID
-      })
+      let result = await API.removePage(pageID)
 
       /* if succes, set the data in the globalState */
       if (result.status === 200) {
@@ -117,8 +141,8 @@ export default function MainView() {
       /* catch errors */
     } catch (error) {
       if (error.response.status === 401) {
-        globalDispatch({type: RESET})
-      }else {
+        globalDispatch({ type: RESET })
+      } else {
         console.log("error creating REMOVE_PAGE", error)
       }
     }
@@ -135,53 +159,25 @@ export default function MainView() {
             type="text"
             value={updatedPageName}
             onChange={(event) => setUpdatedPageName(event.target.value)}
+            onKeyDown={saveNewName}
             style={{ fontSize: "30px", border: "none", outline: "none", backgroundColor: "lightgray" }}
           />
 
-          {(updatedPageName !== originalPageName)
+          {/* {(updatedPageName !== originalPageName)
             ? <button onClick={saveNewName}>Save Name</button>
             : null
-          }
+          } */}
 
           <button onClick={deletePage}>Delete</button>
+          <button onClick={addSubPage}>Create SubPage</button>
         </div>
 
-        <hr></hr>
-
-
-        <div id="mvSubPages">
-          {/* Map here the subpages of that Page */}
-
-          {updatedPageName} has {subPages.length} subpages.
-
-          <button onClick={addSubPage}>Add SubPage</button>
-          <p>List of Subpages</p>
-          
-          {subPages.map(sp => {
-            return (<PageLink name={sp} />)
-          })}
-
-        </div>
 
         <hr></hr>
 
         <div id="mvPageContent">
-          <h3>PLACEHOLDER FOR...</h3>
-          <p>... the Data the Page includes.</p>
-          <p>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-            sed diam nonumy eirmod tempor invidunt ut labore et dolore
-            magna aliquyam erat, sed diam voluptua.
-            At vero eos et accusam et justo duo dolores et ea rebum.
-          </p>
-          <p>
-            Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-            eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed
-            diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-            Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-            ipsum dolor sit amet.
-          </p>
+            <textarea type="text" id='mvPageText' value={pageText} onChange={(e) => setPageText(e.target.value)} />
+            <button onClick={savePageText}>save</button>
         </div>
       </div>
     )

@@ -1,7 +1,7 @@
 /* MODULES */
 import './SBPageContentStyle.css'
 import { useParams } from 'react-router-dom'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 
 
 /* Components */
@@ -47,41 +47,41 @@ export default function SBPageContent(props) {
     so that the sidebar page-tree opens automatically all subpages to the specific page
     MAYBE NEEDS REWORK AND OUTSOURCE
    */
-  const containsURL = (checkPages) => {
-    if (Object.keys(checkPages).length > 0) {
-      for (const subPage of Object.keys(checkPages)) {
-        let nestedPages = getSubPages(globalState.data[subPage].pages)
+  // const containsURL = (checkPages) => {
+  //   if (Object.keys(checkPages).length > 0) {
+  //     for (const subPage of Object.keys(checkPages)) {
+  //       let nestedPages = getSubPages(globalState.data[subPage].pages)
 
 
-        if (pageURL === subPage) {
-          return true
+  //       if (pageURL === subPage) {
+  //         return true
 
 
-        } else {
-          if (Object.keys(nestedPages).length !== 0) {
-            if (containsURL(nestedPages)) {
-              return true
-            }
+  //       } else {
+  //         if (Object.keys(nestedPages).length !== 0) {
+  //           if (containsURL(nestedPages)) {
+  //             return true
+  //           }
 
 
-          } else {
-            continue
-          }
-        }
-      }
-      return false
+  //         } else {
+  //           continue
+  //         }
+  //       }
+  //     }
+  //     return false
       
-    } else {
-      return false
-    }
-  }
+  //   } else {
+  //     return false
+  //   }
+  // }
 
 
   /* Create a empty topLevelPages Array to hold all top level pages */
   let topLevelPages = []
   for (const pageID of Object.keys(getSubPages(props.pagesList))) {
 
-    let opened = pageURL !== pageID ? containsURL(getSubPages([pageID])) : true
+    // let opened = pageURL !== pageID ? containsURL(getSubPages([pageID])) : true
 
     topLevelPages.push(
       <div key={pageID} style={{ margin: "0.5rem 0" }}>
@@ -92,7 +92,7 @@ export default function SBPageContent(props) {
           name={globalState.data[pageID].name}
           pagesList={getSubPages(props.pagesList)[pageID]}
           indentLevel={0}
-          opened={opened}
+          // opened={opened}
         />
       </div>
     )

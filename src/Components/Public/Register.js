@@ -1,7 +1,10 @@
 /* MODULES */
 import { Link, useHistory } from "react-router-dom"
 import { useState } from "react"
-import axios from "axios"
+
+
+/* Other */
+import { API } from "../../Context/ApiCalls"
 
 
 /* REGISTER PAGE */
@@ -19,12 +22,9 @@ export default function Register() {
   const registerPressed = async (event) => {
     event.preventDefault()
 
-    /* Axios call to API */
+    /* call API */
     try {
-      let result = await axios.post('/api/register', {
-        email: email,
-        password: password
-      })
+      let result = await API.register(email, password)
 
       /* Handle result */
       if (result.status === 200) {

@@ -1,7 +1,6 @@
 /* Modules */
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
-import axios from 'axios'
+import { Link, Route, Switch, useParams } from 'react-router-dom';
 
 
 
@@ -17,12 +16,15 @@ import Authed from './Components/Authed/Authed';
 import './AppStyle.css'
 import { DispatchContext, StateContext } from './Context/StateManager';
 import { AUTHED } from './Context/DispatchManager'
+import { API } from './Context/ApiCalls';
 
 
 
 
 /* The main Component of the App */
 export default function App() {
+  /* get url if some is given */
+  const pageURL = useParams
   /* local State */
   const [isLoading, setisLoading] = useState(true)
 
@@ -33,7 +35,7 @@ export default function App() {
 
   /* use an initial Call on App Render to check if user is logged in via cookie */
   useEffect(() => {
-    axios.post('/api/authedStatus')
+    API.authedStatus()
       .then(result => {
 
         /* If he is */
@@ -61,7 +63,7 @@ export default function App() {
 
 
 
-  
+
   /* Render in dependency of the loading state */
   if (isLoading) {
     return (
@@ -92,7 +94,8 @@ export default function App() {
 
 
         {/* "No Found Page" */}
-        <Route render={() => (<><h1>Not logged In</h1><Link to='/'>Welcome Page</Link></>)} />
+        <Route component={Login} />
+        {/* <Route render={() => (<><h1>Not logged In</h1><Link to='/'>Welcome Page</Link></>)} /> */}
       </Switch>
     );
   }
