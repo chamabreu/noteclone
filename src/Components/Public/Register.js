@@ -5,6 +5,7 @@ import { useState } from "react"
 
 /* Other */
 import { API } from "../../Context/ApiCalls"
+import { Button, Form, Jumbotron } from "react-bootstrap"
 
 
 /* REGISTER PAGE */
@@ -46,38 +47,52 @@ export default function Register() {
 
 
   return (
-    <div>
-      <h1>Register Page.</h1>
-      <Link to='/'>Welcome Page</Link>
-      <br></br>
-      <Link to='/login'>Login</Link>
+    <>
+      <Jumbotron>
+        <h1>Register</h1>
 
-      <form onSubmit={registerPressed}>
-        <input
-          type="text"
-          name="email"
-          id="email"
-          placeholder="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
-        <br></br>
-        <br></br>
-        <input
-          type="text"
-          name="password"
-          id="password"
-          placeholder="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <br></br>
-        <br></br>
-        <button type="submit">Register</button>
-      </form>
+        <Link to='/'>
+          <Button>
+            Welcome Page
+          </Button>
+        </Link>
+
+
+        <Link to='/login'>
+          <Button>
+            Login
+          </Button>
+        </Link>
+      </Jumbotron>
+
+      <Form onSubmit={registerPressed}>
+        <Form.Group controlID="registerEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlID="registerPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            name="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </Form.Group>
+
+        <Button type="submit">Register</Button>
+      </Form>
 
       {/* If a Error exists, failed credentials or server error, it gets display here */}
       {error && <p>{error}</p>}
-    </div>
+    </>
   )
 }

@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 
 
 /* Other */
-import './MainViewStyle.css'
 import { DispatchContext, StateContext } from '../../../Context/StateManager'
 import { NEW_SUBPAGE, REMOVE_PAGE, RESET, UPDATE_PAGE_NAME, UPDATE_PAGE_TEXT } from '../../../Context/DispatchManager';
 import { API } from '../../../Context/ApiCalls'
@@ -160,7 +159,6 @@ export default function MainView() {
             value={updatedPageName}
             onChange={(event) => setUpdatedPageName(event.target.value)}
             onKeyDown={saveNewName}
-            style={{ fontSize: "30px", border: "none", outline: "none", backgroundColor: "lightgray" }}
           />
 
           {/* {(updatedPageName !== originalPageName)

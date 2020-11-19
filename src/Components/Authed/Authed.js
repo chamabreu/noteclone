@@ -13,6 +13,7 @@ import SideBar from './SideBar/SideBar'
 /* Other */
 import { StateContext, DispatchContext } from '../../Context/StateManager'
 import { API } from '../../Context/ApiCalls'
+import { Col, Container, Row } from 'react-bootstrap'
 
 
 
@@ -55,29 +56,42 @@ export default function Authed() {
       // <h1>Waiting for Data</h1>
     )
 
-    
+
     /* the normal case, show the page */
   } else {
     return (
-      <main>
-        <Switch>
+      <Container>
+        <Row>
 
-          {/* The "home" of the site */}
-          <Route exact path="/">
-            <SideBar />
-            <MainView />
-          </Route>
+          <Switch>
+
+            {/* The "home" of the site */}
+            <Route exact path="/">
+              <Col>
+                <SideBar />
+              </Col>
+              <Col>
+
+                <MainView />
+              </Col>
+            </Route>
 
 
-          {/* the specific page view */}
-          <Route path="/:page">
-            <SideBar />
-            <MainView />
-          </Route>
+            {/* the specific page view */}
+            <Route path="/:page">
+              <Col>
+                <SideBar />
+              </Col>
+              
+              <Col>
+                <MainView />
+              </Col>
+            </Route>
 
 
-        </Switch>
-      </main>
+          </Switch>
+        </Row>
+      </Container>
     )
 
   }

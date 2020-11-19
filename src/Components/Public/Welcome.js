@@ -1,5 +1,6 @@
 /* MODULES */
 import { useContext } from "react"
+import { Button, Jumbotron } from "react-bootstrap"
 import { Link } from "react-router-dom"
 
 /* Other */
@@ -14,18 +15,30 @@ export default function Welcome() {
 
 
   return (
-    <div>
-      {!state.authed
-        /* This is the default output */
-        ? <h1>Welcome. Please log in.</h1>
+    <>
+      <Jumbotron>
+        {!state.authed
+          /* This is the default output */
+          ?
+          <>
+            <h1>Welcome.</h1>
+          </>
+          /* This line should never get executed, becaue client cant get here in authed state */
+          : <h1>Welcome. You are logged in, {state.user}.</h1>
+        }
+      <Link to='/login'>
+        <Button>
+          Login
+        </Button>
+      </Link>
 
-        /* This line should never get executed, becaue client cant get here in authed state */
-        : <h1>Welcome. You are logged in, {state.user}.</h1>
-      }
-      <hr></hr>
-      <Link to='/login'>Login</Link>
-      <br></br>
-      <Link to='/register'>Register</Link>
-    </div>
+      <Link to='/register'>
+        <Button>
+          Register
+        </Button>
+      </Link>
+      </Jumbotron>
+
+    </>
   )
 }

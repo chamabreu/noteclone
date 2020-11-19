@@ -1,6 +1,6 @@
 /* Specific reducer for Login.js */
 
-export const LOGIN_LOGIN = "LOGIN_LOGIN"
+export const LOGIN_ISLOADING = "LOGIN_ISLOADING"
 export const LOGIN_FAILED = "LOGIN_FAILED"
 export const LOGIN_EMAIL_INPUT = "LOGIN_EMAIL_INPUT"
 export const LOGIN_PASSWORD_INPUT = "LOGIN_PASSWORD_INPUT"
@@ -12,10 +12,10 @@ export const loginReducer = (state, action) => {
 
     /* -------------------------------- */
     /* LOGIN is activated, set loading */
-    case LOGIN_LOGIN:
+    case LOGIN_ISLOADING:
       return {
         ...state,
-        isLoading: true
+        isLoading: action.payload
       }
 
 

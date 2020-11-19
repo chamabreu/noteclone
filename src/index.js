@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import axios from 'axios'
 import StateManager from './Context/StateManager';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* AXIOS SETTINGS */
 /* Switch URL of API for DEV or PROD */
@@ -11,7 +12,6 @@ axios.defaults.baseURL = process.env.NODE_ENV === "production"
   ? 'https://api.simplenote.jmbcode.de'
   : ""
 axios.defaults.withCredentials = true
-
 
 
 

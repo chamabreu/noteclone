@@ -1,12 +1,13 @@
 /* MODULES */
 import { useReducer, useContext } from "react"
 import { Link, useHistory, useLocation } from "react-router-dom"
+import { Button, Form, Jumbotron } from 'react-bootstrap'
 
 
 
 /* Other */
 import { DispatchContext } from "../../Context/StateManager"
-import { loginReducer, LOGIN_FAILED, LOGIN_EMAIL_INPUT, LOGIN_PASSWORD_INPUT, LOGIN_LOGIN } from '../../Context/LogInReducer'
+import { loginReducer, LOGIN_FAILED, LOGIN_EMAIL_INPUT, LOGIN_PASSWORD_INPUT, LOGIN_ISLOADING } from '../../Context/LogInReducer'
 import { AUTHED } from "../../Context/DispatchManager";
 import { API } from "../../Context/ApiCalls";
 
@@ -40,9 +41,11 @@ export default function Login() {
   /* pressed login */
   const logInPressed = async (event) => {
     event.preventDefault()
+    console.log("PRESSED")
 
     /* Set local state */
-    localDispatch({ type: LOGIN_LOGIN })
+    localDispatch({ type: LOGIN_ISLOADING, payload: true })
+
 
     /* call API */
     try {
@@ -70,61 +73,61 @@ export default function Login() {
 
   }
 
-  /* If localstate say its loading */
-  if (isLoading) {
-    return (
-      <h1>Logging in</h1>
-    )
-
-    /* else display Loginform */
-  } else {
-    return (
-      <>
+  return (
+    <>
+      <Jumbotron>
         <h1>Login Page.</h1>
-        <hr></hr>
 
-        <form onSubmit={logInPressed}>
-          <input
+        <Link to='/'>
+          <Button>
+            Welcome Page
+          </Button>
+        </Link>
+
+
+        <Link to='/register'>
+          <Button>
+            Register
+          </Button>
+        </Link>
+      </Jumbotron>
+
+      <Form onSubmit={logInPressed}>
+        <Form.Group controlID="registerEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
             type="text"
             name="email"
-            id="email"
-            placeholder="email"
-            onChange={(e) => localDispatch({ type: LOGIN_EMAIL_INPUT, payload: { email: e.target.value } })}
+            placeholder="Enter email"
             value={email}
+            onChange={(e) => localDispatch({ type: LOGIN_EMAIL_INPUT, payload: { email: e.target.value } })}
           />
+        </Form.Group>
 
-
-          <br></br>
-          <br></br>
-
-          <input
-            type="text"
+        <Form.Group controlID="registerPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
             name="password"
-            id="password"
-            placeholder="password"
-            onChange={(e) => localDispatch({ type: LOGIN_PASSWORD_INPUT, payload: { password: e.target.value } })}
+            placeholder="Enter password"
             value={password}
+            onChange={(e) => localDispatch({ type: LOGIN_PASSWORD_INPUT, payload: { password: e.target.value } })}
           />
+        </Form.Group>
+
+        <Button
+          disabled={isLoading}
+          type="submit"
+        >
+          {isLoading ? "Loading..." : "Login"}
+        </Button>
+      </Form>
+
+      {/* If a Error exists, failed credentials or server error, it gets display here */}
+      {error && <p>{error}</p>}
+
+    </>
+  )
 
 
-          <br></br>
-          <br></br>
-
-          <button type="submit">Login</button>
-        </form>
-
-        {/* If a Error exists, failed credentials or server error, it gets display here */}
-        {error && <p>{error}</p>}
-
-        <hr></hr>
-        <hr></hr>
-
-        <Link to='/'>Welcome Page</Link>
-        <br></br>
-        <Link to='/register'>Register</Link>
-
-      </>
-    )
-
-  }
 }

@@ -6,12 +6,11 @@ import SBPageContent from './SBPage/SBPageContent'
 
 
 /* Other */
-import './SideBarStyles.css'
-import './SBAccountHeaderStyle.css'
-import './SBContentSectionStyle.css'
+
 import { DispatchContext, StateContext } from '../../../Context/StateManager'
 import { NEW_PAGE, RESET } from '../../../Context/DispatchManager';
 import { API } from '../../../Context/ApiCalls'
+import { Button } from 'react-bootstrap';
 
 
 /* The sidebar in the main div */
@@ -110,13 +109,13 @@ export default function SideBar() {
 
           </div>
 
-          <div id="logOutButton" onClick={() => {
+          <Button id="logOutButton" onClick={() => {
             API.logOut()
               .then(() => globalDispatch({ type: "LOG_OUT" }))
               .catch((error) => console.log('error :>> ', error))
           }}>
             Log Me Out
-            </div>
+            </Button>
         </>
 
         /* If sidebar is closed */

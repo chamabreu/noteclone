@@ -13,7 +13,6 @@ import Authed from './Components/Authed/Authed';
 
 
 /* Other */
-import './AppStyle.css'
 import { DispatchContext, StateContext } from './Context/StateManager';
 import { AUTHED } from './Context/DispatchManager'
 import { API } from './Context/ApiCalls';
@@ -93,7 +92,6 @@ export default function App() {
 
         {/* "No Found Page" */}
         <Route component={Login} />
-        {/* <Route render={() => (<><h1>Not logged In</h1><Link to='/'>Welcome Page</Link></>)} /> */}
       </Switch>
     );
   }

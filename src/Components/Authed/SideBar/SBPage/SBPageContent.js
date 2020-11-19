@@ -1,5 +1,4 @@
 /* MODULES */
-import './SBPageContentStyle.css'
 import { useContext } from 'react'
 
 
